@@ -1,0 +1,34 @@
+MI RESIDENCIAL — Versión de pruebas (PWA)
+
+1) SUBIRLA A UN SITIO
+Sube TODOS los archivos de esta carpeta (index.html, manifest.json, sw.js e íconos), sin cambiarles el nombre.
+Debe abrirse con https:// para que funcionen la cámara y la instalación como app.
+- En tu hosting (cPanel u otro): Administrador de archivos > crea una carpeta, ej. /residencial, y sube los archivos.
+  Queda en: https://tusitio.com/residencial/
+- Opción gratis y rápida: arrastra esta carpeta en Netlify Drop (app.netlify.com/drop) y te da un enlace https.
+
+2) CREAR TU USUARIO DE DUEÑO DE LA APP
+En la pantalla de inicio toca "Crear usuario de dueño de la app" y escribe tu nombre, usuario y contraseña (mínimo 6 caracteres).
+Después entras con ese usuario y contraseña en el mismo formulario de la pantalla de inicio.
+Para cambiar usuario o contraseña: Más > Mi cuenta.
+El usuario de ejemplo "plataforma" (contraseña 1234) también sigue disponible para pruebas.
+
+BORRAR LOS DATOS DE EJEMPLO PARA EMPEZAR REAL
+En la pantalla de inicio, al final: "Borrar todos los registros" y escribe BORRAR.
+Se borran las residenciales y datos de ejemplo; tu usuario de dueño se conserva.
+(También está en Más > Borrar todos los registros, entrando como dueño.)
+
+3) CREAR UNA RESIDENCIAL
+Como dueño: Residenciales > Registrar. Al crearla te da el usuario y contraseña del administrador.
+El administrador entra eligiendo su residencial en la pantalla de inicio.
+Desde Casas > Subir archivo puede cargar todas las casas con la plantilla de Excel.
+
+USUARIOS DEL EJEMPLO (si cargaste los ejemplos; contraseña 1234)
+Residencial Los Almendros: admin, casa5, inquilino8, vigilante, cobrador.
+
+IMPORTANTE PARA LAS PRUEBAS
+Esta versión guarda los datos en el navegador de cada teléfono. Sirve para probar y enseñar la app,
+pero cada dispositivo tiene sus propios datos: lo que creas en tu teléfono no aparece en el de otra persona.
+Para que administradores, residentes y vigilantes trabajen juntos desde sus teléfonos hace falta la
+versión con base de datos en la nube (siguiente fase).
+Si borras los datos del navegador, también se borra lo que hayas creado.

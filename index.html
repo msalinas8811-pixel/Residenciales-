@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Residencial">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Mi Residencial</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--text:#13202a;--muted:#64748b;--line:#e3e8ee;--pri:#0f766e;--onpri:#fff;--pri2:#d5f5ef;--ok:#15803d;--okbg:#dcfce7;--warn:#a16207;--warnbg:#fef3c7;--bad:#b91c1c;--badbg:#fee2e2;--info:#1d4ed8;--infobg:#dbeafe;--shadow:0 1px 2px rgba(15,23,42,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1218;--card:#141e27;--text:#e6edf3;--muted:#94a3b8;--line:#243241;--pri:#2dd4bf;--onpri:#04211f;--pri2:#0f3d3a;--ok:#4ade80;--okbg:#10301e;--warn:#fbbf24;--warnbg:#382808;--bad:#f87171;--badbg:#3b1515;--info:#93c5fd;--infobg:#132a4a;--shadow:none}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg)}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);font-size:15px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:6px;padding:calc(10px + env(safe-area-inset-top)) 10px 10px 14px;background:var(--pri);color:var(--onpri)}
+.top .tt{flex:1;min-width:0}.top small{display:block;opacity:.85;font-size:12px}.top b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.icon-btn{position:relative;background:none;border:0;padding:8px;border-radius:10px;display:grid;place-items:center;color:inherit}
+.badge{position:absolute;top:1px;right:1px;background:#ef4444;color:#fff;font-size:11px;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 4px;font-weight:700}
+.wrap{max-width:680px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.nav button{flex:1;background:none;border:0;color:var(--muted);padding:9px 0 7px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px}
+.nav button.on{color:var(--pri);font-weight:600}
+h1{font-size:26px}h2{font-size:21px;margin:2px 0 12px}
+h3{margin:22px 0 8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.row{display:flex;align-items:center;gap:12px}.grow{flex:1;min-width:0}
+.item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;width:100%;text-align:left;box-shadow:var(--shadow)}
+.muted{color:var(--muted)}.sm{font-size:13px}.right{text-align:right}
+.chip{display:inline-block;font-size:12px;padding:3px 8px;border-radius:999px;font-weight:600;background:var(--line);margin:2px 4px 2px 0;white-space:nowrap}
+.chip.ok{background:var(--okbg);color:var(--ok)}.chip.warn{background:var(--warnbg);color:var(--warn)}.chip.bad{background:var(--badbg);color:var(--bad)}.chip.info{background:var(--infobg);color:var(--info)}.chip.mut{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;box-shadow:var(--shadow)}
+.kpi b{display:block;font-size:21px;margin-top:2px}.kpi span{font-size:12px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 16px;font-weight:600;background:var(--pri);color:var(--onpri);text-decoration:none;text-align:center}
+.btn.sec{background:var(--pri2);color:var(--pri)}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}.btn.bad{background:var(--badbg);color:var(--bad)}.btn.ok{background:var(--ok);color:#fff}
+.btn.block{width:100%;margin-top:8px}.btn.smb{padding:8px 12px;font-size:13px;border-radius:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btns .btn{flex:1 1 auto}
+label.f{display:block;margin-bottom:12px;font-size:13px;color:var(--muted);font-weight:600}
+input,select,textarea{width:100%;margin-top:4px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit;font-size:16px}
+input[type=file]{padding:9px;font-size:14px}
+textarea{min-height:90px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}.chk:last-child{border-bottom:0}
+.chk input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--pri)}
+.seg{display:flex;background:var(--line);border-radius:12px;padding:3px;margin:10px 0 12px;overflow-x:auto}
+.seg button{flex:1;border:0;background:none;padding:8px 6px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:640px;max-height:92vh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;animation:up .18s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sh-h{display:flex;align-items:center;justify-content:space-between;padding:12px 10px 12px 16px;border-bottom:1px solid var(--line)}
+.sh-b{padding:16px;overflow:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#111827;color:#fff;padding:11px 16px;border-radius:12px;z-index:70;font-size:14px;max-width:92%;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.pin{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:24px;font-weight:800;letter-spacing:.16em;color:var(--pri)}
+.alert{border-radius:14px;padding:13px 14px;margin-bottom:10px;display:block;width:100%;text-align:left;border:0}
+.alert b{display:block}.alert p{margin:3px 0 0;color:var(--text);font-size:14px}
+.alert.bad{background:var(--badbg);color:var(--bad)}.alert.ok{background:var(--okbg);color:var(--ok)}.alert.warn{background:var(--warnbg);color:var(--warn)}.alert.info{background:var(--infobg);color:var(--info)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:130px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;font-size:11px;color:var(--muted)}
+.bars i{display:block;width:100%;background:var(--pri);border-radius:6px 6px 2px 2px;min-height:3px}.bars em{font-style:normal;font-weight:700;color:var(--text)}
+.empty{text-align:center;color:var(--muted);padding:22px 10px;font-size:14px}
+.av{width:42px;height:42px;border-radius:12px;background:var(--pri2);color:var(--pri);display:grid;place-items:center;font-weight:800;flex:none;font-size:18px}
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;max-width:440px;margin:0 auto;padding:24px 18px}
+.logo{width:64px;height:64px;border-radius:18px;background:var(--pri);color:var(--onpri);display:grid;place-items:center;margin-bottom:12px}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.thumb{max-width:100%;border-radius:12px;border:1px solid var(--line);display:block;margin:0 auto 10px}
+.tipos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+.tipos button{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-size:13px;font-weight:600;text-align:left;box-shadow:var(--shadow)}
+.months{display:flex;flex-wrap:wrap;margin-top:6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;font-size:14px}.kv span{color:var(--muted)}.kv b{word-break:break-word}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-right:6px;vertical-align:middle}
+.thread{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin:8px 0}
+.big-ok{font-size:17px;padding:16px}
+.note{font-size:13px;color:var(--muted);margin:6px 0 12px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* =========================================================
+   MI RESIDENCIAL — Prototipo demo (PWA)
+   Datos guardados en el dispositivo (localStorage).
+   Roles: admin · residente (dueño) · inquilino · vigilante
+   ========================================================= */
+const KEY='miresidencial_v4';const PKEY=KEY+'_plat';const dbKey=id=>KEY+'_r_'+id;let PLAT=null,RES=null;
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+Number(n||0).toFixed(2);
+const pad=n=>String(n).padStart(2,'0');
+function ymd(d=new Date()){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function nowISO(){const d=new Date();return ymd(d)+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
+const periodoActual=()=>ymd().slice(0,7);
+function addMonths(p,n){let[y,m]=p.split('-').map(Number);m+=n;while(m>12){m-=12;y++}while(m<1){m+=12;y--}return y+'-'+pad(m)}
+function addDays(iso,n){const d=new Date(iso+'T12:00');d.setDate(d.getDate()+n);return ymd(d)}
+const perL=p=>{const[y,m]=p.split('-');return MESES[+m-1]+' '+y};
+const perC=p=>{const[y,m]=p.split('-');return MESES[+m-1].slice(0,3)+' '+y.slice(2)};
+const hora=iso=>iso?iso.slice(11,16):'';
+function fFecha(iso){if(!iso)return'';const[y,m,d]=iso.slice(0,10).split('-');let s=+d+' '+MESES[+m-1].slice(0,3).toLowerCase()+' '+y;if(iso.length>10)s+=' · '+hora(iso);return s}
+function genCodigo(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+
+const ICON={
+home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+houses:'<path d="M3 21V10l6-5 6 5v11"/><path d="M15 21h6v-8l-3-2.5"/><path d="M8 21v-5h2v5"/>',
+card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+mega:'<path d="M3 11v2a1 1 0 001 1h3l5 4V6L7 10H4a1 1 0 00-1 1z"/><path d="M16 9a4 4 0 010 6"/>',
+menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+bell:'<path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 004 0"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',
+shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+back:'<path d="M15 18l-6-6 6-6"/>',
+chev:'<path d="M9 6l6 6-6 6"/>',
+log:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c.8-3.5 3.5-5.5 7-5.5s6.2 2 7 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.8c2 .7 3.4 2.6 4 5.2"/>',
+alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+out:'<path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4M6 12h10"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
+doc:'<path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',
+flag:'<path d="M4 22V4M4 4h13l-2 4 2 4H4"/>',
+reset:'<path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8"/><path d="M3 3v5h5"/>',
+phone:'<path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.7a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.7.7a2 2 0 011.7 2z"/>',
+doorin:'<path d="M10 4H5v16h5"/><path d="M14 8l4 4-4 4M18 12H9"/>'
+};
+const ic=(n,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]||''}</svg>`;
+
+const ROL={superadmin:'Plataforma · dueño de la app',cobrador:'Cobrador',admin:'Administración',residente:'Residente (propietario)',inquilino:'Inquilino',vigilante:'Vigilancia'};
+const TIPOS={personal:{l:'Personal de trabajo',e:'🛠️'},entrega:{l:'Entrega de comida',e:'🛵'},correo:{l:'Correo / paquetería',e:'📦'},visita:{l:'Visita',e:'👥'}};
+const OFICIOS=['Empleada doméstica','Niñera','Jardinero','Albañil','Electricista','Fontanero','Técnico (internet / cable)','Técnico (electrodomésticos)','Pintor','Chofer','Otro'];
+const CAT={trabajos:{l:'Trabajos en la residencial',e:'🚧'},servicio:{l:'Interrupción de servicio',e:'⚠️'},seguridad:{l:'Seguridad',e:'🛡️'},evento:{l:'Reunión / evento',e:'📅'},pagos:{l:'Pagos',e:'💳'},general:{l:'General',e:'📢'}};
+const CATR=['Seguridad','Mantenimiento','Alumbrado','Basura','Ruido','Áreas verdes','Agua / drenaje','Mascotas','Vecinos','Otro'];
+const EST_R={abierto:{l:'Abierto',c:'warn'},proceso:{l:'En proceso',c:'info'},resuelto:{l:'Resuelto',c:'ok'}};
+const EST_P={revision:{l:'En revisión',c:'info'},aprobado:{l:'Aprobado',c:'ok'},rechazado:{l:'Rechazado',c:'bad'}};
+const METODO={cobrador:'Cobrador a domicilio',transferencia:'Transferencia',link:'Link de pago',efectivo:'Efectivo (registrado por admin)'};
+
+/* ---------------- Datos ---------------- */
+let DB, S={user:null,tab:'inicio',sub:null,sel:null};
+function genImg({titulo,sub,filas=[],sello,color='#0f766e'}){
+  const W=640,c=document.createElement('canvas');const x=c.getContext('2d');
+  const wrap=t=>{t=String(t??'');const out=[];let line='';t.split(' ').forEach(w=>{if((line+' '+w).trim().length>40){out.push(line.trim());line=w}else line+=' '+w});if(line.trim())out.push(line.trim());return out.length?out:['']};
+  const rows=filas.map(([k,v])=>[k,wrap(v)]);
+  const H=150+rows.reduce((a,[,l])=>a+30+l.length*26,0)+(sello?120:40);
+  c.width=W;c.height=H;x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle=color;x.fillRect(0,0,W,108);
+  x.fillStyle='#fff';x.font='bold 30px sans-serif';x.fillText(titulo,32,50);x.font='18px sans-serif';x.fillText(sub||'',32,84);
+  let y=150;rows.forEach(([k,l])=>{x.fillStyle='#64748b';x.font='16px sans-serif';x.fillText(k,32,y);y+=26;x.fillStyle='#111827';x.font='bold 20px sans-serif';l.forEach(t=>{x.fillText(t,32,y);y+=26});y+=4;x.strokeStyle='#e5e7eb';x.beginPath();x.moveTo(32,y-14);x.lineTo(W-32,y-14);x.stroke()});
+  if(sello){x.save();x.translate(W-180,y+50);x.rotate(-.12);x.strokeStyle='#15803d';x.lineWidth=4;x.strokeRect(-130,-36,260,72);x.fillStyle='#15803d';x.font='bold 28px sans-serif';x.textAlign='center';x.fillText(sello,0,10);x.restore()}
+  return c.toDataURL('image/jpeg',.82);
+}
+function genFoto(ini,bg,l1,l2){const c=document.createElement('canvas');c.width=480;c.height=480;const x=c.getContext('2d');x.fillStyle=bg;x.fillRect(0,0,480,480);x.fillStyle='rgba(255,255,255,.9)';x.beginPath();x.arc(240,190,90,0,7);x.fill();x.beginPath();x.arc(240,470,170,Math.PI,0);x.fill();x.fillStyle=bg;x.font='bold 64px sans-serif';x.textAlign='center';x.fillText(ini,240,212);if(l1)selloVivo(c,l1,l2);return c.toDataURL('image/jpeg',.8)}
+function selloVivo(c,l1,l2){const x=c.getContext('2d');const h=Math.max(56,c.height*.13);x.fillStyle='rgba(0,0,0,.65)';x.fillRect(0,c.height-h,c.width,h);x.fillStyle='#fff';x.textAlign='left';const fs=Math.max(13,Math.round(h*.26));x.font='bold '+fs+'px sans-serif';x.fillText(l1,12,c.height-h+fs+8);x.font=fs+'px sans-serif';if(l2)x.fillText(l2,12,c.height-h+fs*2+14)}
+function seed(){
+  const hoy=ymd(),per=periodoActual(),inicio=addMonths(per,-5);
+  const db={version:1,inicioCobro:inicio,
+    residencial:{nombre:'Residencial Los Almendros',direccion:'Calle principal, Pasajes A y B',municipio:'Santa Tecla, La Libertad',telefono:'2200-0000',email:'administracion@losalmendros.example',registro:'',
+      presidente:{nombre:'Roberto Aguilar',dui:'01234567-8',telefono:'7000-1111',email:'presidente@losalmendros.example'},
+      admin:{nombre:'Lucía Martínez',telefono:'7000-2222',email:'admin@losalmendros.example'},
+      banco:{banco:'Banco (ejemplo)',tipo:'Cuenta corriente',numero:'000-000000-0',titular:'Asociación Residencial Los Almendros'},
+      vigilancia:{telefono:'7000-3333'},
+      equipo:[{id:'e1',cargo:'Presidente',nombre:'Roberto Aguilar',dui:'01234567-8',telefono:'7000-1111',email:'presidente@losalmendros.example'},{id:'e2',cargo:'Vicepresidente',nombre:'Gloria Ventura',telefono:'7000-1212'},{id:'e3',cargo:'Secretario(a)',nombre:'Fernando Quintanilla',telefono:'7000-1313'},{id:'e4',cargo:'Tesorero(a)',nombre:'Patricia Solórzano',telefono:'7000-1414'},{id:'e5',cargo:'Vocal',nombre:'Ernesto Lemus',telefono:'7000-1515'},{id:'e6',cargo:'Vocal',nombre:'Claudia Marroquín',telefono:'7000-1616'},{id:'e7',cargo:'Contador(a)',nombre:'Julio Arévalo',telefono:'7000-1717'},{id:'e8',cargo:'Administrador(a)',nombre:'Lucía Martínez',telefono:'7000-2222',email:'admin@losalmendros.example'},{id:'e9',cargo:'Asistente administrativo',nombre:'Karla Menjívar',telefono:'7000-1818'},{id:'e10',cargo:'Jardinero',nombre:'Santos Ayala',telefono:'7000-1919'},{id:'e11',cargo:'Conserje',nombre:'Rosa Hernández',telefono:'7000-2020'}],
+      portones:[{id:'p1',nombre:'Portón principal',tipo:'Vehicular y peatonal',horario:'24 horas'},{id:'p2',nombre:'Portón de servicio',tipo:'Vehicular y peatonal',horario:'6:00–18:00'},{id:'p3',nombre:'Acceso peatonal Polígono B',tipo:'Peatonal',horario:'5:00–21:00'}],
+      portonTipo:{personal:'p2',entrega:'p1',correo:'p1',visita:'p1'}},
+    config:{cuota:35,diaVence:10,recargo:3,linkPago:'',diasAviso:5},
+    casas:[],usuarios:[],cuotas:[],pagos:[],pases:[],avisos:[],reclamos:[],notifs:[],solicitudes:[],autorizaciones:[],recordados:{}};
+  const nombres=['Marta Rivas','Óscar Pineda','Elena Cruz','Raúl Guevara','Carlos Méndez','Sofía Orellana','Héctor Molina','Ana López','Diana Alvarado','Mario Henríquez'];
+  for(let i=1;i<=12;i++)db.casas.push({id:'c'+i,numero:String(i),pasaje:i<=6?'Polígono A':'Polígono B',familia:'',duenoId:null,codigo:genCodigo()});
+  db.usuarios.push({id:'u_admin',rol:'admin',nombre:'Lucía Martínez',user:'admin',pass:'1234',activo:true,tel:'7000-2222'});
+  db.usuarios.push({id:'u_vig',rol:'vigilante',nombre:'José Portillo',user:'vigilante',pass:'1234',turno:'Día (6:00–18:00)',dui:'04567890-1',activo:true});
+  const fams=['Rivas Morales','Pineda Soto','Cruz Ayala','Guevara Funes','Méndez Romero','Orellana Paz','Molina Vides','López Castro','Alvarado Reyes','Henríquez Mejía'];nombres.forEach((n,k)=>{const i=k+1;db.casas[k].familia=fams[k];db.usuarios.push({id:'u_c'+i,rol:'residente',nombre:n,user:'casa'+i,pass:'1234',casaId:'c'+i,tel:'7'+(100+i)+'-'+(4000+i*7),email:'casa'+i+'@correo.example',dui:'0'+(1000000+i*1111)+'-'+i%10,activo:true});db.casas[k].duenoId='u_c'+i});
+  db.usuarios.push({id:'u_inq8',rol:'inquilino',nombre:'Pedro Castillo',user:'inquilino8',pass:'1234',casaId:'c8',padreId:'u_c8',tel:'7555-1212',dui:'05551212-3',hasta:addDays(hoy,180),activo:true});
+  const mora={c3:3,c5:2,c7:1,c9:4,c10:2};
+  db.casas.forEach(c=>{for(let k=0;k<6;k++){const p=addMonths(inicio,k);const pend=k>=6-(mora[c.id]||0);db.cuotas.push({id:uid(),casaId:c.id,periodo:p,monto:db.config.cuota,estado:pend?'pendiente':'pagado'})}});
+  // pagos aprobados de ejemplo (casa 5)
+  db.pagos.push({id:uid(),casaId:'c5',periodos:[0,1,2,3].map(k=>addMonths(inicio,k)),monto:140,metodo:'transferencia',ref:'884213',fecha:addDays(hoy,-60)+'T09:12',fechaAprob:addDays(hoy,-59)+'T10:00',estado:'aprobado',usuarioId:'u_c5',comprobante:null});
+  // pago en revisión (casa 2)
+  const c2=db.cuotas.find(q=>q.casaId==='c2'&&q.periodo===per);c2.estado='revision';
+  db.pagos.push({id:uid(),casaId:'c2',periodos:[per],monto:38,metodo:'transferencia',ref:'552901',banco:'Banco (ejemplo)',fecha:addDays(hoy,-1)+'T19:40',estado:'revision',usuarioId:'u_c2',
+    comprobante:{tipo:'img',nombre:'comprobante.jpg',data:genImg({titulo:'Transferencia exitosa',sub:'Comprobante de ejemplo',filas:[['Monto','$38.00'],['Cuenta destino','Asociación Residencial Los Almendros'],['Referencia','552901'],['Concepto','Cuota '+perL(per)+' Casa 2']],color:'#1d4ed8'})}});
+  db.recaudoBase={};
+  const P=(o)=>Object.assign({id:uid(),pin:String(100000+Math.floor(Math.random()*899999)),estado:'activo',ingresos:[],dui:'',placa:'',detalle:'',horario:''},o);
+  db.pases.push(P({casaId:'c5',creadoPor:'u_c5',tipo:'personal',nombre:'María Hernández',dui:'03344556-7',detalle:'Empleada doméstica',horario:'Lun–Sáb 7:00–16:00',desde:addDays(hoy,-10),hasta:addDays(hoy,50),ingresos:[{entrada:hoy+'T07:45',salida:null,guardiaId:'u_vig'}]}));
+  db.pases.push(P({casaId:'c5',creadoPor:'u_c5',tipo:'visita',nombre:'Jorge Ramírez',placa:'P123-456',detalle:'Visita familiar',desde:hoy,hasta:hoy}));
+  db.pases.push(P({casaId:'c5',creadoPor:'u_c5',tipo:'entrega',nombre:'Repartidor',detalle:'Pedido de almuerzo (app de delivery)',desde:hoy,hasta:hoy}));
+  db.pases.push(P({casaId:'c8',creadoPor:'u_inq8',tipo:'personal',nombre:'Luis Gómez',dui:'02233445-6',detalle:'Técnico (internet / cable)',desde:hoy,hasta:addDays(hoy,1)}));
+  db.pases.push(P({casaId:'c3',creadoPor:'u_c3',tipo:'personal',nombre:'Santos Rivera',dui:'06677889-0',detalle:'Albañil',horario:'Lun–Vie 7:00–17:00',desde:addDays(hoy,-5),hasta:addDays(hoy,20),ingresos:[{entrada:addDays(hoy,-1)+'T07:05',salida:addDays(hoy,-1)+'T16:50',guardiaId:'u_vig'}]}));
+  db.usuarios.push({id:'u_cob',rol:'cobrador',nombre:'Mauricio Campos',user:'cobrador',pass:'1234',dui:'03456789-0',tel:'7444-5566',activo:true});
+  db.visitasCobro=[{id:uid(),casaId:'c9',periodos:db.cuotas.filter(q=>q.casaId==='c9'&&q.estado==='pendiente').map(q=>q.periodo),fecha:hoy,franja:'tarde',recibo:'ambos',nota:'Preguntar por Diana',cobradorId:'',estado:'pendiente',solicitadoPor:'u_c9',creada:addDays(hoy,-1)+'T18:00'},{id:uid(),casaId:'c10',periodos:db.cuotas.filter(q=>q.casaId==='c10'&&q.estado==='pendiente').map(q=>q.periodo),fecha:addDays(hoy,1),franja:'manana',recibo:'digital',nota:'',cobradorId:'u_cob',estado:'pendiente',solicitadoPor:'u_admin',creada:hoy+'T08:00'}];
+  {const c7=db.cuotas.filter(q=>q.casaId==='c7'&&q.estado==='pendiente');c7.forEach(q=>q.estado='pagado');db.reciboSeq=2;
+   const pA={id:uid(),casaId:'c1',periodos:[addMonths(per,-1)],monto:35,metodo:'cobrador',forma:'efectivo',ref:'C-00001',talonario:'4512',recibo:'fisico',fecha:addDays(hoy,-1)+'T10:20',fechaAprob:addDays(hoy,-1)+'T10:20',estado:'aprobado',usuarioId:'u_cob',cobradorId:'u_cob',cierreId:'ci1',comprobante:null};
+   const pH={id:uid(),casaId:'c7',periodos:c7.map(q=>q.periodo),monto:c7.length*38,metodo:'cobrador',forma:'efectivo',ref:'C-00002',talonario:'',recibo:'digital',fecha:hoy+'T09:40',fechaAprob:hoy+'T09:40',estado:'aprobado',usuarioId:'u_cob',cobradorId:'u_cob',cierreId:null,comprobante:null};
+   db.pagos.push(pA,pH);db.cierres=[{id:'ci1',cobradorId:'u_cob',fecha:addDays(hoy,-1)+'T17:30',pagos:[pA.id],total:35,efectivo:35,cheques:0,declarado:35,nota:'',estado:'cuadrado',recibido:35,dif:0,revisadoPor:'u_admin',fechaRev:addDays(hoy,-1)+'T18:00'}]}
+  db.pases.forEach(p=>p.porton=db.residencial.portonTipo[p.tipo]);db.autorizaciones.forEach(a=>a.porton='p1');
+  db.avisos.push({id:uid(),categoria:'servicio',prioridad:'urgente',titulo:'Corte de agua programado',cuerpo:'La distribuidora realizará trabajos en la tubería principal. Se recomienda almacenar agua.',cuando:addDays(hoy,2)+'T08:00',fecha:addDays(hoy,-1)+'T17:00'});
+  db.avisos.push({id:uid(),categoria:'trabajos',prioridad:'normal',titulo:'Reparación del portón principal',cuerpo:'Durante la reparación, el ingreso vehicular será por el portón de servicio.',cuando:addDays(hoy,5)+'T09:00',fecha:addDays(hoy,-3)+'T12:00'});
+  db.avisos.push({id:uid(),categoria:'evento',prioridad:'normal',titulo:'Asamblea general de residentes',cuerpo:'Se presentará el informe financiero y el plan de mejoras. Asistencia importante.',cuando:addDays(hoy,12)+'T18:00',fecha:addDays(hoy,-6)+'T09:00'});
+  db.reclamos.push({id:uid(),casaId:'c5',usuarioId:'u_c5',categoria:'Alumbrado',titulo:'Lámpara dañada en Pasaje A',descripcion:'La lámpara frente a la casa 5 no enciende desde hace 3 noches.',ubicacion:'Frente a casa 5',foto:null,estado:'proceso',fecha:addDays(hoy,-4)+'T20:10',hilo:[{autor:'u_admin',texto:'Gracias por reportar. El electricista viene el jueves.',fecha:addDays(hoy,-3)+'T08:30'}]});
+  db.reclamos.push({id:uid(),casaId:'c9',usuarioId:'u_c9',categoria:'Basura',titulo:'Basura acumulada en zona verde',descripcion:'Hay bolsas acumuladas cerca del área de juegos.',ubicacion:'Área de juegos',foto:null,estado:'abierto',fecha:addDays(hoy,-1)+'T11:00',hilo:[]});
+  db.casas[10].duenoId=null;db.casas[11].duenoId=null;
+  db.solicitudes.push({id:uid(),casaId:'c11',nombre:'Daniela Flores',familia:'Flores Díaz',foto:{tipo:'img',nombre:'foto.jpg',data:genFoto('DF','#7c3aed')},selfie:{tipo:'img',nombre:'selfie.jpg',data:genFoto('DF','#7c3aed','Verificación en vivo · '+fFecha(addDays(hoy,-1)+'T21:12'),'Reto: Muestra 2 dedos junto a tu cara'),fecha:addDays(hoy,-1)+'T21:12',reto:'Muestra 2 dedos junto a tu cara',metodo:'camara'},dui:'07788990-1',tel:'7666-9090',email:'daniela@correo.example',user:'daniela',pass:'1234',estado:'pendiente',fecha:addDays(hoy,-1)+'T21:15',
+    documento:{tipo:'img',nombre:'escritura.jpg',data:genImg({titulo:'Escritura de propiedad',sub:'Documento de ejemplo',filas:[['Inmueble','Casa 11, Pasaje B, Residencial Los Almendros'],['Propietaria','Daniela Flores'],['Inscripción','Registro de la Propiedad (ejemplo)']],color:'#334155'})},
+    duiFoto:{tipo:'img',nombre:'dui.jpg',data:genImg({titulo:'Documento de identidad',sub:'Imagen de ejemplo',filas:[['Nombre','Daniela Flores'],['DUI','07788990-1']],color:'#475569'})}});
+  db.autorizaciones.push({id:uid(),casaId:'c5',nombre:'Mensajero de paquetería',dui:'',tipo:'correo',motivo:'Paquete a nombre de Carlos Méndez',placa:'',estado:'esperando',fecha:nowISO(),guardiaId:'u_vig'});
+  const n=(u,t,x,a,f)=>db.notifs.push({id:uid(),userId:u,titulo:t,texto:x,fecha:f||nowISO(),leida:false,accion:a||null});
+  n('u_c5','Bienvenido a Mi Residencial','Desde aquí controlas accesos, pagos, avisos y reportes de tu casa.',null,addDays(hoy,-2)+'T10:00');
+  n('u_c5','📦 Autorización solicitada','Vigilancia pide autorizar el ingreso de: Mensajero de paquetería.',{tab:'inicio'});
+  n('u_c5','✅ Ingresó: María Hernández','Personal de trabajo ingresó a la colonia a las 07:45 · Validado por José Portillo',{tab:'accesos'},hoy+'T07:45');
+  n('u_admin','Nueva solicitud de registro','Daniela Flores solicita acceso como propietaria de Casa 11.',{tab:'solicitudes'});
+  return db;
+}
+function load(id){if(!PLAT||!PLAT.residenciales.length){DB=null;RES=null;return}id=id||RES||PLAT.ultima||'r1';if(!PLAT.residenciales.some(r=>r.id===id))id=PLAT.residenciales[0].id;RES=id;PLAT.ultima=id;savePlat();try{DB=JSON.parse(localStorage.getItem(dbKey(id)))}catch(e){DB=null}if(!DB||!DB.version){DB=id==='r1'?seed():seedVacia(PLAT.residenciales.find(r=>r.id===id))}DB.visitasCobro=DB.visitasCobro||[];DB.cierres=DB.cierres||[];DB.reciboSeq=DB.reciboSeq||0;ensureCuotas();save()}
+function save(){if(!DB||!RES)return;try{localStorage.setItem(dbKey(RES),JSON.stringify(DB))}catch(e){toast('Almacenamiento lleno: usa fotos más livianas o restablece la demo')}}
+function ensureCuotas(){const fin=periodoActual();DB.casas.forEach(c=>{let p=c.desde||DB.inicioCobro,g=0;while(p<=fin&&g<240){if(!DB.cuotas.some(q=>q.casaId===c.id&&q.periodo===p))DB.cuotas.push({id:uid(),casaId:c.id,periodo:p,monto:DB.config.cuota,estado:'pendiente'});p=addMonths(p,1);g++}})}
+
+/* ---------------- Helpers de negocio ---------------- */
+const casa=id=>DB.casas.find(c=>c.id===id);
+const usuario=id=>DB.usuarios.find(u=>u.id===id);
+const casaNom=id=>{const c=casa(id);if(!c)return'—';const dup=DB.casas.some(x=>x.id!==c.id&&x.numero===c.numero);return 'Casa '+c.numero+(dup?' '+c.pasaje.replace(/^pol[ií]gono\s*/i,'Pol. '):'')};
+const duenoNom=id=>{const c=casa(id);const u=c&&usuario(c.duenoId);return u?u.nombre:'Sin propietario registrado'};
+const CARGOS={directiva:['Presidente','Vicepresidente','Secretario(a)','Tesorero(a)','Síndico','Vocal'],administracion:['Administrador(a)','Contador(a)','Asistente administrativo'],operativo:['Conserje','Jardinero','Mantenimiento','Electricista','Otro']};
+const GRUPO={directiva:'Junta directiva',administracion:'Administración',operativo:'Personal operativo'};
+const grupoDe=c=>Object.keys(CARGOS).find(g=>CARGOS[g].includes(c))||'operativo';
+const miembro=c=>(DB.residencial.equipo||[]).find(m=>m.cargo===c);
+const portones=()=>DB.residencial.portones||[];
+const portonNom=id=>{const p=portones().find(x=>x.id===id);return p?p.nombre:'Sin asignar'};
+const portonDe=t=>(DB.residencial.portonTipo||{})[t]||'';
+const casaDesc=c=>c.pasaje+(c.familia?' · Fam. '+c.familia:'');
+const duiOk=d=>!d||/^\d{8}-\d$/.test(d);
+function avatar(u,s=42){if(u&&u.foto&&u.foto.data)return `<img src="${u.foto.data}" alt="" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:cover;flex:none">`;const ini=(u?u.nombre:'?').split(' ').map(w=>w[0]).slice(0,2).join('');return `<div class="av" style="width:${s}px;height:${s}px;border-radius:50%">${esc(ini)}</div>`}
+const vence=p=>p+'-'+pad(DB.config.diaVence);
+const vencida=c=>c.estado!=='pagado'&&ymd()>vence(c.periodo);
+const montoCuota=c=>c.monto+(vencida(c)?Number(DB.config.recargo||0):0);
+const cuotasCasa=id=>DB.cuotas.filter(c=>c.casaId===id).sort((a,b)=>a.periodo.localeCompare(b.periodo));
+const moraCasa=id=>cuotasCasa(id).filter(c=>c.estado==='pendiente'&&vencida(c));
+const pendCasa=id=>cuotasCasa(id).filter(c=>c.estado==='pendiente');
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+function morosos(){return DB.casas.map(c=>{const m=moraCasa(c.id);return{c,m,total:sum(m,montoCuota)}}).filter(x=>x.m.length).sort((a,b)=>b.m.length-a.m.length)}
+function estadoCasa(c){const m=moraCasa(c.id);if(m.length)return{l:m.length+(m.length>1?' meses':' mes')+' en mora',c:'bad'};if(cuotasCasa(c.id).some(q=>q.estado==='revision'))return{l:'Pago en revisión',c:'info'};if(pendCasa(c.id).length)return{l:'Cuota del mes pendiente',c:'warn'};return{l:'Al día',c:'ok'}}
+const usuariosCasa=cid=>DB.usuarios.filter(u=>u.casaId===cid&&u.activo&&(u.rol==='residente'||u.rol==='inquilino')).map(u=>u.id);
+const duenoIds=cid=>{const c=casa(cid);return c&&c.duenoId?[c.duenoId]:[]};
+const admins=()=>DB.usuarios.filter(u=>u.rol==='admin'&&u.activo).map(u=>u.id);
+const vigilantes=()=>DB.usuarios.filter(u=>u.rol==='vigilante'&&u.activo).map(u=>u.id);
+const todos=()=>DB.usuarios.filter(u=>u.activo).map(u=>u.id);
+function notificar(ids,titulo,texto,accion){const f=nowISO();[...new Set(ids)].forEach(u=>{if(S.user&&u===S.user.id&&S.user.rol==='admin')return;DB.notifs.unshift({id:uid(),userId:u,titulo,texto,fecha:f,leida:false,accion:accion||null})});if(DB.notifs.length>800)DB.notifs.length=800}
+const dentro=p=>{const l=p.ingresos[p.ingresos.length-1];return!!(l&&!l.salida)};
+const vigenteHoy=p=>p.estado==='activo'&&p.desde<=ymd()&&ymd()<=p.hasta;
+function estadoPase(p){const h=ymd(),l=p.ingresos[p.ingresos.length-1];
+  if(l&&!l.salida)return{l:'Dentro desde '+hora(l.entrada),c:'ok'};
+  if(p.estado==='cancelado')return{l:'Cancelado',c:'mut'};
+  if(h>p.hasta)return{l:'Vencido',c:'mut'};
+  if(h<p.desde)return{l:'Programado',c:'info'};
+  const hi=p.ingresos.filter(i=>i.entrada.slice(0,10)===h);
+  if(hi.length)return{l:'Salió a las '+hora(hi[hi.length-1].salida),c:'mut'};
+  return{l:'Esperado hoy',c:'warn'}}
+function genPin(){let p;do{p=String(100000+Math.floor(Math.random()*899999))}while(DB.pases.some(x=>x.pin===p&&x.estado==='activo'));return p}
+const vigencia=p=>p.desde===p.hasta?fFecha(p.desde):fFecha(p.desde)+' → '+fFecha(p.hasta);
+
+/* ---------------- UI base ---------------- */
+let toastT;function toast(t){let d=$('#toast');if(!d){d=document.createElement('div');d.id='toast';d.className='toast';document.body.appendChild(d)}d.textContent=t;d.style.display='block';clearTimeout(toastT);toastT=setTimeout(()=>d.style.display='none',3200)}
+function sheet(title,html){closeSheet();const d=document.createElement('div');d.className='ov';d.id='ov';d.innerHTML=`<div class="sheet" role="dialog" aria-label="${esc(title)}"><div class="sh-h"><b>${title}</b><button class="icon-btn" onclick="closeSheet()" aria-label="Cerrar">✕</button></div><div class="sh-b">${html}</div></div>`;d.addEventListener('click',e=>{if(e.target===d)closeSheet()});document.body.appendChild(d)}
+function closeSheet(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}const o=$('#ov');if(o)o.remove()}
+const alertBox=(c,t,p,on)=>on?`<button class="alert ${c}" onclick="${on}"><b>${t}</b>${p?`<p>${p}</p>`:''}</button>`:`<div class="alert ${c}"><b>${t}</b>${p?`<p>${p}</p>`:''}</div>`;
+const kpi=(l,v,on)=>`<button class="kpi" onclick="${on}"><span>${l}</span><b>${v}</b></button>`;
+const chip=(l,c='')=>`<span class="chip ${c}">${l}</span>`;
+const empty=t=>`<div class="empty">${t}</div>`;
+const menuItem=(icon,label,on,badge)=>`<button class="item" onclick="${on}"><span class="av">${ic(icon,20)}</span><b class="grow">${label}</b>${badge?chip(badge,'bad'):''}${ic('chev',18)}</button>`;
+const seg=(key,opts)=>`<div class="seg">${opts.map(([v,l])=>`<button class="${S[key]===v?'on':''}" onclick="S.${key}='${v}';render()">${l}</button>`).join('')}</div>`;
+function verArchivo(f,titulo){if(!f)return toast('Sin archivo adjunto');
+  if(f.tipo==='img')return sheet(titulo||'Archivo',`<img class="thumb" src="${f.data}" alt="${esc(f.nombre)}"><a class="btn block" download="${esc(f.nombre)}" href="${f.data}">Descargar</a>`);
+  if(!f.data)return sheet(titulo||'Archivo',`<p>📄 ${esc(f.nombre)}</p><p class="note">En la demo los PDF mayores a 900 KB solo guardan el nombre. En la versión real se guardan completos en la nube.</p>`);
+  let url=f.data;try{const b=atob(f.data.split(',')[1]);const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);url=URL.createObjectURL(new Blob([a],{type:'application/pdf'}))}catch(e){}
+  sheet(titulo||'Archivo',`<p>📄 ${esc(f.nombre)}</p><a class="btn block" href="${url}" target="_blank" rel="noopener">Abrir PDF</a><a class="btn ghost block" download="${esc(f.nombre)}" href="${url}">Descargar</a>`)}
+function leerArchivo(file){return new Promise((res,rej)=>{if(!file||!file.size)return res(null);const r=new FileReader();
+  if(file.type.startsWith('image/')){r.onload=()=>{const img=new Image();img.onload=()=>{const m=1100,s=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res({tipo:'img',nombre:file.name.replace(/\.\w+$/,'')+'.jpg',data:c.toDataURL('image/jpeg',.7)})};img.onerror=()=>rej(new Error('img'));img.src=r.result};r.onerror=rej;r.readAsDataURL(file)}
+  else if(file.type==='application/pdf'||/\.pdf$/i.test(file.name)){if(file.size>900000)return res({tipo:'pdf',nombre:file.name,data:null});r.onload=()=>res({tipo:'pdf',nombre:file.name,data:r.result});r.onerror=rej;r.readAsDataURL(file)}
+  else rej(new Error('tipo'))})}
+
+/* ---------------- Navegación ---------------- */
+const NAV={
+  admin:[{id:'inicio',l:'Inicio',i:'home'},{id:'casas',l:'Casas',i:'houses'},{id:'pagos',l:'Pagos',i:'card'},{id:'avisos',l:'Avisos',i:'mega'},{id:'mas',l:'Más',i:'menu'}],
+  residente:[{id:'inicio',l:'Inicio',i:'home'},{id:'accesos',l:'Accesos',i:'key'},{id:'pagos',l:'Pagos',i:'card'},{id:'avisos',l:'Avisos',i:'mega'},{id:'mas',l:'Más',i:'menu'}],
+  inquilino:[{id:'inicio',l:'Inicio',i:'home'},{id:'accesos',l:'Accesos',i:'key'},{id:'avisos',l:'Avisos',i:'mega'},{id:'mas',l:'Más',i:'menu'}],
+  vigilante:[{id:'inicio',l:'Portería',i:'shield'},{id:'sinpase',l:'Sin pase',i:'doorin'},{id:'bitacora',l:'Bitácora',i:'log'},{id:'avisos',l:'Avisos',i:'mega'},{id:'mas',l:'Más',i:'menu'}]};
+const BACK={casa:'casas'};
+function go(t,sub){S.tab=t;S.sub=sub??null;closeSheet();render();window.scrollTo(0,0)}
+function render(){
+  const app=$('#app');
+  if(!S.user&&!DB&&PLAT.residenciales.length)load();
+  if(!S.user){app.innerHTML=S.tab==='registro'?vRegistro():S.tab==='solicitarRes'?vSolicitarRes():vLogin();return}
+  const u=S.user,navs=NAV[u.rol],V=VIEWS[u.rol];
+  if(!V[S.tab])S.tab='inicio';
+  const isSub=!navs.some(n=>n.id===S.tab);
+  const nl=u.rol==='superadmin'?PLAT.solicitudes.filter(s=>s.estado==='pendiente').length:DB.notifs.filter(n=>n.userId===u.id&&!n.leida).length;
+  const body=V[S.tab]();
+  app.innerHTML=`<header class="top">${isSub?`<button class="icon-btn" onclick="go('${BACK[S.tab]||'mas'}')" aria-label="Volver">${ic('back')}</button>`:''}<div class="tt"><small>${ROL[u.rol]}${u.casaId?' · '+casaNom(u.casaId):''}</small><b>${esc(u.rol==='superadmin'?'Mi Residencial · Plataforma':DB.residencial.nombre)}</b></div><button class="icon-btn" onclick="verNotifs()" aria-label="Notificaciones">${ic('bell')}${nl?`<span class="badge">${nl>99?'99+':nl}</span>`:''}</button></header>${S.imp?impBanner():''}<main class="wrap">${body}</main><nav class="nav">${navs.map(n=>`<button class="${n.id===S.tab||(isSub&&n.id===(BACK[S.tab]||'mas'))?'on':''}" onclick="go('${n.id}')">${ic(n.i)}<span>${n.l}</span></button>`).join('')}</nav>`;
+}
+
+/* ---------------- Sesión ---------------- */
+function setSes(id){try{sessionStorage.setItem(KEY+'_s',id||'')}catch(e){}try{localStorage.setItem(KEY+'_last',id||'')}catch(e){}}
+function getSes(){let s='';try{s=sessionStorage.getItem(KEY+'_s')}catch(e){}if(s===null||s===undefined||s===''){try{s=localStorage.getItem(KEY+'_last')||''}catch(e){}}return s}
+function puedeEntrar(u){if(u&&u.rol!=='superadmin'){const r=PLAT.residenciales.find(x=>x.id===RES);if(r&&r.estado==='suspendida')return'El servicio de esta residencial está suspendido. Contacta al proveedor de la app.';if(r&&r.estado==='prueba'&&r.vencePrueba&&ymd()>r.vencePrueba)return'El periodo de prueba de esta residencial terminó.'}if(!u||!u.activo)return'Usuario desactivado. Contacta a la administración';if(u.rol==='inquilino'){if(u.hasta&&ymd()>u.hasta)return'Tu acceso como inquilino venció. Pide al propietario que lo renueve';const p=usuario(u.padreId);if(!p||!p.activo)return'El propietario de la casa ya no está activo'}return''}
+function login(e){e.preventDefault();const f=new FormData(e.target);const un=String(f.get('user')).trim().toLowerCase();const sa=PLAT.superadmins.find(x=>x.user===un&&x.pass===f.get('pass'));if(sa)return entrar(sa);if(!DB)return toast('Usuario o contraseña incorrectos');const u=DB.usuarios.find(x=>x.user.toLowerCase()===un&&x.pass===f.get('pass'));if(!u)return toast('Usuario o contraseña incorrectos');entrar(u)}
+function asegurarEjemplo(){const ej=seedPlat();if(!PLAT.superadmins.some(x=>x.id==='sa1'))PLAT.superadmins.unshift(ej.superadmins[0]);if(!PLAT.residenciales.some(r=>r.id==='r1')){PLAT.residenciales.unshift(ej.residenciales[0]);try{localStorage.removeItem(dbKey('r1'))}catch(e){}}PLAT.demo=true;savePlat()}
+function entrarId(id){asegurarEjemplo();if(id==='sa1')return entrar(PLAT.superadmins.find(x=>x.id==='sa1'));if(RES!=='r1')load('r1');entrar(usuario(id))}
+function entrar(u){const err=puedeEntrar(u);if(err)return toast(err);S.user=u;S.tab='inicio';S.sel=null;S.imp=null;setSes((u.rol==='superadmin'?'plat':RES)+'|'+u.id);autoRecordatorio(u);save();render();window.scrollTo(0,0)}
+function salir(){if(S.imp){const sa=S.imp;S.imp=null;S.user=sa;S.tab='residenciales';S.sub=null;setSes('plat|'+sa.id);render();return}S.modoPlat=!!(S.user&&S.user.rol==='superadmin');S.user=null;S.tab='inicio';setSes('');render()}
+function resetDemo(){limpiarDatos(true);toast('Datos de ejemplo cargados')}
+function limpiarDatos(conEjemplos){const propios=(PLAT&&PLAT.superadmins||[]).filter(x=>x.id!=='sa1');
+  try{Object.keys(localStorage).filter(k=>k.startsWith(KEY)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+  if(conEjemplos){PLAT=seedPlat();PLAT.demo=true;PLAT.superadmins=PLAT.superadmins.concat(propios)}else PLAT={version:1,ultima:null,superadmins:propios,residenciales:[],solicitudes:[],demo:false};
+  savePlat();RES=null;DB=null;if(PLAT.residenciales.length)load();S.imp=null;S.user=null;S.tab='inicio';S.sub=null;setSes('');closeSheet();render()}
+function borrarRegistros(){const propios=PLAT.superadmins.filter(x=>x.id!=='sa1');
+  sheet('Borrar todos los registros',`<div class="alert bad"><b>Se borra todo lo de este dispositivo</b><p>Residenciales, casas, usuarios, pagos, accesos, avisos y reclamos, incluidos los de ejemplo. No se puede deshacer.</p></div>
+  <p class="sm">${propios.length?`Se conserva tu usuario de dueño (<b>${propios.map(x=>esc(x.user)).join(', ')}</b>) para que entres y registres tu primera residencial real.`:`Después crea tu usuario con <b>“Crear usuario de dueño de la app”</b> y registra tu primera residencial real.`}</p>
+  <label class="f">Escribe BORRAR para confirmar<input id="borrarConf" autocomplete="off" autocapitalize="characters" oninput="document.getElementById('borrarBtn').disabled=this.value.trim().toUpperCase()!=='BORRAR'"></label>
+  <button id="borrarBtn" class="btn bad block" disabled onclick="limpiarDatos(false);toast('Registros borrados. Ya puedes empezar con datos reales.')">Borrar todo y empezar en blanco</button><button class="btn ghost block" onclick="closeSheet()">Cancelar</button>`)}
+function autoRecordatorio(u){if(u.rol!=='residente')return;const per=periodoActual(),k=u.casaId+'_'+per;if(DB.recordados[k])return;
+  const m=moraCasa(u.casaId);const pend=pendCasa(u.casaId);
+  if(m.length){notificar([u.id],'💳 Tienes pagos vencidos',`${m.length} mes(es) en mora: ${m.map(c=>perL(c.periodo)).join(', ')}. Total ${money(sum(m,montoCuota))}.`,{tipo:'pagar',periodos:m.map(c=>c.periodo)});DB.recordados[k]=1}
+  else if(pend.length){const dias=Math.round((new Date(vence(per)+'T12:00')-new Date(ymd()+'T12:00'))/864e5);if(dias<=DB.config.diasAviso){notificar([u.id],'⏰ Tu cuota vence pronto',`La cuota de ${perL(per)} vence el ${fFecha(vence(per))}.`,{tipo:'pagar',periodos:[per]});DB.recordados[k]=1}}}
+
+/* ---------------- Login y registro ---------------- */
+function vLogin(){return `<div class="login"><div class="logo">${ic('houses',34)}</div><h1 style="margin:0 0 2px">Mi Residencial</h1><p class="muted" style="margin:0 0 18px">Administración de residenciales</p>
+<form onsubmit="login(event)" class="card">${PLAT.residenciales.length?`<label class="f">Residencial<select onchange="cambiarRes(this.value)">${PLAT.residenciales.map(r=>`<option value="${r.id}" ${r.id===RES?'selected':''}>${esc(r.nombre)}</option>`).join('')}</select></label>`:''}<label class="f">Usuario<input name="user" autocomplete="username" autocapitalize="none" required></label><label class="f">Contraseña<input name="pass" type="password" autocomplete="current-password" required></label><button class="btn block">Ingresar</button></form>
+${DB?`<button class="btn ghost block" onclick="irRegistro()">Soy propietario · crear mi cuenta</button>`:''}<button class="btn ghost block" onclick="S.tab='solicitarRes';render()">Quiero la app para mi residencial</button><button class="btn ghost block" onclick="nuevoDueno()">⚙️ Crear usuario de dueño de la app</button>
+<h3>Probar la demo como</h3><div class="demo">${[['u_admin','Administración'],['u_c5','Residente · Casa 5'],['u_inq8','Inquilino · Casa 8'],['u_vig','Vigilancia'],['u_cob','Cobrador'],['sa1','Dueño de la app']].map(([id,l])=>`<button class="btn sec" onclick="entrarId('${id}')">${l}</button>`).join('')}</div>
+<p class="note" style="text-align:center;margin-top:16px">Prototipo: los datos se guardan solo en este dispositivo. Ejemplo Los Almendros: admin, casa5, inquilino8, vigilante, cobrador. Dueño de la app: plataforma. Contraseña de todos: 1234.</p>${PLAT.residenciales.length||PLAT.solicitudes.length?`<button class="btn ghost block" style="color:var(--bad)" onclick="borrarRegistros()">🗑️ Borrar todos los registros</button>`:`<button class="btn ghost block" onclick="resetDemo()">Cargar datos de ejemplo</button>`}</div>`}
+function nuevoDueno(){sheet('Crear usuario de dueño de la app',`<p class="note" style="margin-top:0">El dueño de la app da de alta las residenciales, sus perfiles, administradores y planes. Después entras con este usuario en la pantalla de inicio.</p><form onsubmit="crearPlataforma(event)"><label class="f">Tu nombre<input name="nombre" required autocomplete="name"></label><label class="f">Usuario<input name="user" required autocapitalize="none" autocomplete="username" placeholder="Ej. miguel"></label><div class="two"><label class="f">Contraseña<input name="pass" type="password" required minlength="6" autocomplete="new-password"></label><label class="f">Repite la contraseña<input name="pass2" type="password" required minlength="6" autocomplete="new-password"></label></div><button class="btn block">Crear usuario y entrar</button></form>`)}
+const RETOS=['Muestra 2 dedos junto a tu cara','Levanta el pulgar y sonríe','Toca tu oreja derecha','Muestra la palma de tu mano abierta','Cierra un ojo y sonríe'];
+let SELFIE=null,camStream=null;
+function irRegistro(){S.tab='registro';S.reto=null;SELFIE=null;render();window.scrollTo(0,0)}
+function vRegistro(){const c12=casa('c12');S.reto=S.reto||RETOS[Math.floor(Math.random()*RETOS.length)];return `<div class="login"><button class="btn ghost smb" style="align-self:flex-start;margin-bottom:12px" onclick="S.tab='inicio';render()">${ic('back',16)} Volver</button><h2>Registro de propietario</h2>
+<div class="card sm"><b>¿Cómo se valida que eres el dueño?</b><ol style="margin:8px 0 0;padding-left:18px;color:var(--muted)"><li>Usa el <b>código de verificación</b> único de tu casa, entregado en físico por la administración.</li><li>Adjunta un documento que acredite la propiedad y la foto de tu DUI.</li><li>Tómate una <b>foto en tiempo real</b> siguiendo la instrucción que te damos, para comprobar que eres tú.</li><li>La administración compara todo y aprueba. Hasta entonces la cuenta no tiene acceso.</li></ol></div>
+<form onsubmit="enviarRegistro(event)" class="card">
+<h3 style="margin-top:0">Tu casa</h3>
+<label class="f">Casa<select name="casa" required>${DB.casas.map(c=>`<option value="${c.id}" ${c.id==='c12'?'selected':''}>${casaNom(c.id)} · ${esc(c.pasaje)}${c.duenoId?'':' (sin registrar)'}</option>`).join('')}</select></label>
+<label class="f">Código de verificación de la casa<input name="codigo" required autocapitalize="characters" placeholder="Ej. 7KQ2MX"></label>
+<p class="note" style="margin-top:-6px">Demo: el código de Casa 12 es <b>${c12?c12.codigo:''}</b>.</p>
+<label class="f">Apellidos de la familia<input name="familia" required placeholder="Ej. Hernández López"></label>
+<h3>Tus datos</h3>
+<label class="f">Nombre completo<input name="nombre" required></label>
+<div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off" required placeholder="00000000-0"></label><label class="f">Teléfono<input name="tel" required inputmode="tel"></label></div>
+<label class="f">Correo<input name="email" type="email" required></label>
+<label class="f">Tu foto de perfil<input name="foto" type="file" accept="image/*" required></label>
+<h3>Documentos</h3>
+<label class="f">Documento de propiedad (foto o PDF)<input name="doc" type="file" accept="image/*,application/pdf" required></label>
+<label class="f">Foto del DUI<input name="duif" type="file" accept="image/*" required></label>
+<h3>Foto en tiempo real</h3>
+<div class="alert info"><b>Instrucción: ${esc(S.reto)}</b><p>Tómate la foto ahora con la cámara frontal. No se aceptan fotos de la galería. La foto queda sellada con fecha y hora.</p></div>
+<div id="selfiePrev">${selfiePrev()}</div>
+<button type="button" class="btn sec block" onclick="abrirCamara()">${SELFIE?'Repetir foto':'Abrir cámara'}</button>
+<input type="file" id="selfieIn" accept="image/*" capture="user" hidden onchange="selfieArchivo(this)">
+<h3>Acceso</h3>
+<div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none"></label><label class="f">Contraseña<input name="pass" type="password" required minlength="4"></label></div>
+<label class="chk" style="border:0"><input type="checkbox" required><span class="sm">Declaro que soy propietario(a) y que la información es verídica.</span></label>
+<button class="btn block">Enviar solicitud</button></form></div>`}
+const selfiePrev=()=>SELFIE?`<img class="thumb" src="${SELFIE.data}" alt="Foto en tiempo real" style="max-height:260px">`:'';
+function pintarSelfie(){const p=document.getElementById('selfiePrev');if(p)p.innerHTML=selfiePrev()}
+async function abrirCamara(){
+  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){try{
+    const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:720}},audio:false});
+    sheet('Foto en tiempo real',`<div class="alert info"><b>${esc(S.reto)}</b></div><video id="camv" autoplay playsinline muted style="width:100%;border-radius:12px;transform:scaleX(-1);background:#000"></video><button class="btn block" onclick="capturarSelfie()">${ic('check',18)} Tomar foto</button>`);
+    camStream=st;const v=document.getElementById('camv');v.srcObject=st;try{await v.play()}catch(e){}return}catch(e){camStream=null}}
+  document.getElementById('selfieIn').click()}
+function sellar(c,metodo){selloVivo(c,'Verificación en vivo · '+fFecha(nowISO()),'Reto: '+S.reto);SELFIE={tipo:'img',nombre:'selfie.jpg',data:c.toDataURL('image/jpeg',.75),fecha:nowISO(),reto:S.reto,metodo};pintarSelfie();const b=document.querySelector('[onclick="abrirCamara()"]');if(b)b.textContent='Repetir foto';toast('Foto en tiempo real lista')}
+function capturarSelfie(){const v=document.getElementById('camv');if(!v||!v.videoWidth)return toast('La cámara aún no está lista');const s=Math.min(1,900/v.videoWidth);const c=document.createElement('canvas');c.width=Math.round(v.videoWidth*s);c.height=Math.round(v.videoHeight*s);const x=c.getContext('2d');x.translate(c.width,0);x.scale(-1,1);x.drawImage(v,0,0,c.width,c.height);x.setTransform(1,0,0,1,0,0);closeSheet();sellar(c,'camara')}
+function selfieArchivo(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;
+  if(!f.type.startsWith('image/'))return toast('Debe ser una foto');
+  if(Date.now()-f.lastModified>5*60*1000)return toast('La foto debe tomarse en este momento con la cámara, no desde la galería');
+  const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,900/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);sellar(c,'captura')};img.src=r.result};r.readAsDataURL(f)}
+async function enviarRegistro(e){e.preventDefault();const f=new FormData(e.target);const c=casa(f.get('casa'));
+  if(String(f.get('codigo')).trim().toUpperCase()!==c.codigo)return toast('El código no coincide con la casa seleccionada');
+  if(!/^\d{8}-\d$/.test(String(f.get('dui')).trim()))return toast('El DUI debe tener 9 dígitos: 00000000-0');
+  const un=String(f.get('user')).trim().toLowerCase();if(DB.usuarios.some(u=>u.user.toLowerCase()===un)||DB.solicitudes.some(s=>s.estado==='pendiente'&&s.user.toLowerCase()===un))return toast('Ese usuario ya existe, elige otro');
+  if(DB.solicitudes.some(s=>s.estado==='pendiente'&&s.casaId===c.id))return toast('Ya hay una solicitud pendiente para esa casa');
+  if(!SELFIE)return toast('Falta la foto en tiempo real');
+  let doc,duif,foto;try{doc=await leerArchivo(f.get('doc'));duif=await leerArchivo(f.get('duif'));foto=await leerArchivo(f.get('foto'))}catch(x){return toast('Archivo no válido. Usa foto o PDF')}
+  DB.solicitudes.unshift({id:uid(),casaId:c.id,nombre:f.get('nombre'),familia:String(f.get('familia')).trim(),dui:f.get('dui'),tel:f.get('tel'),email:f.get('email'),user:un,pass:f.get('pass'),documento:doc,duiFoto:duif,foto,selfie:SELFIE,estado:'pendiente',fecha:nowISO()});
+  notificar(admins(),'Nueva solicitud de registro',`${f.get('nombre')} solicita acceso como propietario(a) de ${casaNom(c.id)}.`,{tab:'solicitudes'});save();SELFIE=null;
+  S.tab='inicio';render();sheet('Solicitud enviada',`<p>Tu solicitud para <b>${casaNom(c.id)}</b> quedó en revisión. La administración validará tus documentos y tu foto, y te avisará. Después podrás ingresar con tu usuario <b>${esc(un)}</b>.</p><button class="btn block" onclick="closeSheet()">Entendido</button>`)}
+
+/* ---------------- Notificaciones ---------------- */
+function verNotifs(){if(S.user.rol==='superadmin')return go('solicitudesRes');const ns=DB.notifs.filter(n=>n.userId===S.user.id).slice(0,80);
+  sheet('Notificaciones',ns.length?ns.map(n=>`<button class="item" onclick="abrirNotif('${n.id}')"><div class="grow"><b>${!n.leida?'<span class="dot"></span>':''}${esc(n.titulo)}</b><div class="sm">${esc(n.texto)}</div><div class="muted sm">${fFecha(n.fecha)}</div></div></button>`).join('')+`<button class="btn ghost block" onclick="leerTodas()">Marcar todas como leídas</button>`:empty('Sin notificaciones'))}
+function abrirNotif(id){const n=DB.notifs.find(x=>x.id===id);if(!n)return;n.leida=true;save();closeSheet();const a=n.accion;if(!a)return render();if(a.tipo==='pagar'){S.sel=a.periodos;return go('pagos')}go(a.tab||'inicio',a.sub)}
+function leerTodas(){DB.notifs.forEach(n=>{if(n.userId===S.user.id)n.leida=true});save();closeSheet();render()}
+
+/* =========================================================
+   ADMINISTRACIÓN
+   ========================================================= */
+function vAdmInicio(){
+  const mor=morosos(),totalM=sum(mor,x=>x.total);
+  const pv=DB.pagos.filter(p=>p.estado==='revision').length;
+  const sol=DB.solicitudes.filter(s=>s.estado==='pendiente').length;
+  const rec=DB.reclamos.filter(r=>r.estado!=='resuelto').length;
+  const den=DB.pases.filter(dentro).length,mes=periodoActual();
+  const recaud=sum(DB.pagos.filter(p=>p.estado==='aprobado'&&(p.fechaAprob||p.fecha).slice(0,7)===mes),p=>p.monto);
+  const pers=[...Array(6)].map((_,i)=>addMonths(mes,i-5));
+  const pct=pers.map(p=>{const cs=DB.cuotas.filter(c=>c.periodo===p);return cs.length?Math.round(cs.filter(c=>c.estado==='pagado').length/cs.length*100):0});
+  const R_=DB.residencial,pr=miembro('Presidente');let h=`<h2>Hola, ${esc(S.user.nombre.split(' ')[0])}</h2><button class="item" onclick="go('residencial')"><div class="av">${ic('houses',20)}</div><div class="grow"><b>${esc(R_.nombre)}</b><div class="sm muted">${esc(R_.direccion)} · ${esc(R_.municipio)}</div><div class="sm">${DB.casas.length} casas · ${portones().length} portones · Presidente: ${esc(pr?pr.nombre:'sin asignar')}</div></div>${ic('chev',18)}</button>`;
+  if(sol)h+=alertBox('info',`${sol} solicitud(es) de registro`,'Propietarios esperando validación de documentos.',"go('solicitudes')");
+  {const nc=DB.cierres.filter(c=>c.estado==='enviado').length;if(nc)h+=alertBox('warn',`${nc} cierre(s) de cobrador por cuadrar`,'Compara el efectivo entregado con los recibos.',"S.cseg='cierres';go('cobros')")}
+  if(pv)h+=alertBox('warn',`${pv} pago(s) por validar`,'Comprobantes adjuntados por residentes.',"S.pseg='validar';go('pagos')");
+  h+=`<div class="kpis">${kpi('Recaudado este mes',money(recaud),"S.pseg='historial';go('pagos')")}${kpi('Por cobrar en mora',money(totalM),"S.pseg='mora';go('pagos')")}${kpi('Casas en mora',mor.length+' de '+DB.casas.length,"S.cf='mora';go('casas')")}${kpi('Personas dentro ahora',den,"go('accesos')")}${kpi('Reclamos abiertos',rec,"go('reclamos')")}${kpi('Pases activos hoy',DB.pases.filter(vigenteHoy).length,"go('accesos')")}</div>`;
+  h+=`<h3>% de casas al día por mes</h3><div class="card"><div class="bars">${pers.map((p,i)=>`<div><em>${pct[i]}%</em><i style="height:${Math.max(pct[i],2)}%"></i>${perC(p)}</div>`).join('')}</div></div>`;
+  h+=`<h3>Casas en mora</h3>${mor.slice(0,6).map(moraRow).join('')||empty('Ninguna casa en mora 🎉')}${mor.length>6?`<button class="btn ghost block" onclick="S.pseg='mora';go('pagos')">Ver todas (${mor.length})</button>`:''}`;
+  return h}
+function moraRow(x){return `<button class="item" onclick="go('casa','${x.c.id}')"><div class="av">${esc(x.c.numero)}</div><div class="grow"><b>${casaNom(x.c.id)}</b> <span class="muted sm">· ${esc(duenoNom(x.c.id))}</span><div class="months">${x.m.map(c=>chip(perC(c.periodo),'bad')).join('')}</div></div><div class="right"><b>${money(x.total)}</b><div class="muted sm">${x.m.length} mes(es)</div></div></button>`}
+
+function vAdmCasas(){S.cf=S.cf||'todas';
+  return `<div class="row" style="margin-bottom:10px"><h2 class="grow" style="margin:0">Casas</h2><button class="btn smb ghost" onclick="importarCasas()">${ic('doc',16)} Subir archivo</button><button class="btn smb sec" onclick="nuevaCasa()">${ic('plus',16)} Casa</button></div>
+  <input placeholder="Buscar casa o propietario" value="${esc(S.q||'')}" oninput="S.q=this.value;document.getElementById('lc').innerHTML=listaCasas()">
+  ${seg('cf',[['todas','Todas'],['mora','En mora'],['aldia','Al día'],['sin','Sin dueño']])}<div id="lc">${listaCasas()}</div>`}
+function listaCasas(){const q=(S.q||'').toLowerCase();
+  const l=DB.casas.filter(c=>{const e=estadoCasa(c);if(S.cf==='mora'&&e.c!=='bad')return false;if(S.cf==='aldia'&&e.c==='bad')return false;if(S.cf==='sin'&&c.duenoId)return false;return !q||('casa '+c.numero+' '+c.pasaje+' '+(c.familia||'')+' '+duenoNom(c.id)).toLowerCase().includes(q)});
+  return l.map(c=>{const e=estadoCasa(c);return `<button class="item" onclick="go('casa','${c.id}')"><div class="av">${esc(c.numero)}</div><div class="grow"><b>${casaNom(c.id)}</b> ${casaNom(c.id).includes('Pol.')?'':`<span class="muted sm">· ${esc(c.pasaje)}</span>`}<div class="sm muted">${c.familia?'Fam. '+esc(c.familia)+' · ':''}${esc(duenoNom(c.id))}</div></div>${chip(e.l,e.c)}</button>`}).join('')||empty('Sin resultados')}
+function formCasa(c){c=c||{};return `<label class="f">Número de casa<input name="numero" required inputmode="numeric" value="${esc(c.numero||'')}"></label><label class="f">Polígono<input name="pasaje" required placeholder="Ej. Polígono A" value="${esc(c.pasaje||'')}"></label><label class="f">Apellidos de la familia<input name="familia" placeholder="Ej. Hernández López" value="${esc(c.familia||'')}"></label>`}
+function nuevaCasa(){sheet('Agregar casa',`<form onsubmit="guardarCasa(event)">${formCasa()}<p class="note">Las cuotas se generan a partir de este mes. ¿Son muchas casas? <a href="#" onclick="event.preventDefault();importarCasas()">Súbelas desde un archivo de Excel</a>.</p><button class="btn block">Guardar</button></form>`)}
+function editarCasa(id){sheet('Editar casa',`<form onsubmit="guardarCasa(event,'${id}')">${formCasa(casa(id))}<button class="btn block">Guardar cambios</button></form>`)}
+function guardarCasa(e,id){e.preventDefault();const f=new FormData(e.target);const num=String(f.get('numero')).trim(),pol=String(f.get('pasaje')).trim(),fam=String(f.get('familia')).trim();
+  if(DB.casas.some(c=>c.id!==id&&c.numero===num&&c.pasaje.toLowerCase()===pol.toLowerCase()))return toast('Ya existe la casa '+num+' en '+pol);
+  if(id){Object.assign(casa(id),{numero:num,pasaje:pol,familia:fam});save();closeSheet();render();return toast('Casa actualizada')}
+  DB.casas.push({id:'c'+uid(),numero:num,pasaje:pol,familia:fam,duenoId:null,codigo:genCodigo(),desde:periodoActual()});ensureCuotas();save();closeSheet();render();toast('Casa agregada')}
+function vAdmCasa(){const c=casa(S.sub);if(!c)return empty('Casa no encontrada');const d=usuario(c.duenoId);const e=estadoCasa(c);
+  const inq=DB.usuarios.filter(u=>u.rol==='inquilino'&&u.casaId===c.id);
+  const cs=cuotasCasa(c.id).slice().reverse();const m=moraCasa(c.id);
+  const ing=[];DB.pases.filter(p=>p.casaId===c.id).forEach(p=>p.ingresos.forEach(i=>ing.push({p,i})));ing.sort((a,b)=>b.i.entrada.localeCompare(a.i.entrada));
+  const rc=DB.reclamos.filter(r=>r.casaId===c.id);
+  return `<div class="row"><div class="av" style="width:52px;height:52px;font-size:22px">${esc(c.numero)}</div><div class="grow"><h2 style="margin:0">${casaNom(c.id)}</h2><div class="muted sm">${esc(casaDesc(c))}</div></div>${chip(e.l,e.c)}</div><button class="btn ghost smb" style="margin-top:10px" onclick="editarCasa('${c.id}')">Editar número, polígono y familia</button>
+  <h3>Propietario</h3><div class="card">${d?`<div class="row" style="margin-bottom:12px">${avatar(d,52)}<b>${esc(d.nombre)}</b></div><div class="kv"><span>Nombre</span><b>${esc(d.nombre)}</b><span>Teléfono</span><b>${esc(d.tel||'—')}</b><span>Correo</span><b>${esc(d.email||'—')}</b><span>DUI</span><b>${esc(d.dui||'—')}</b><span>Usuario</span><b>${esc(d.user)}</b></div>`:`<p class="muted" style="margin:0 0 8px">Sin propietario registrado.</p><button class="btn sec smb" onclick="crearDueno('${c.id}')">Crear usuario del propietario</button>`}
+   <div class="row" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)"><div class="grow sm"><span class="muted">Código de registro</span><div class="pin" style="font-size:20px">${c.codigo}</div><span class="muted">Entregar en físico al propietario. Se renueva al aprobar.</span></div><button class="btn ghost smb" onclick="regenCodigo('${c.id}')">Renovar</button></div></div>
+  ${inq.length?`<h3>Inquilinos</h3>${inq.map(u=>`<div class="item"><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">${esc(u.tel||'')} · acceso hasta ${fFecha(u.hasta)}</div></div>${chip(u.activo?'Activo':'Inactivo',u.activo?'ok':'mut')}</div>`).join('')}`:''}
+  <h3>Acciones</h3><div class="btns" style="margin-top:0"><button class="btn" onclick="recordarCasa('${c.id}')">Recordar pago</button><button class="btn sec" onclick="enviarLinkCasa('${c.id}')">Enviar link de pago</button></div><div class="btns"><button class="btn ghost" onclick="notifCasa('${c.id}')">Enviar notificación</button><button class="btn ghost" onclick="efectivoCasa('${c.id}')">Registrar pago efectivo</button></div><div class="btns"><button class="btn ghost" onclick="pedirCobro('${c.id}')">Enviar cobrador a domicilio</button></div>
+  <h3>Estado de cuenta ${m.length?`· mora ${money(sum(m,montoCuota))}`:''}</h3><div class="card">${cs.map(q=>{const st=q.estado==='pagado'?['Pagado','ok']:q.estado==='revision'?['En revisión','info']:vencida(q)?['Vencido','bad']:['Pendiente','warn'];return `<div class="chk"><span class="grow">${perL(q.periodo)}</span>${chip(st[0],st[1])}<b style="min-width:62px;text-align:right">${money(q.estado==='pagado'?q.monto:montoCuota(q))}</b></div>`}).join('')}</div>
+  <h3>Últimos accesos</h3>${ing.slice(0,6).map(x=>ingresoRow(x)).join('')||empty('Sin ingresos registrados')}
+  <h3>Reclamos</h3>${rc.map(reclamoItem).join('')||empty('Sin reclamos')}`}
+function regenCodigo(id){if(!confirm('¿Generar un código nuevo? El anterior dejará de funcionar.'))return;casa(id).codigo=genCodigo();save();render();toast('Código renovado')}
+function recordarCasa(cid){const m=moraCasa(cid),p=pendCasa(cid);if(!p.length)return toast('Esta casa está al día');if(!duenoIds(cid).length)return toast('La casa no tiene propietario registrado');
+  const l=m.length?m:p;notificar(duenoIds(cid),m.length?'💳 Recordatorio: pagos en mora':'⏰ Recordatorio de pago',`${m.length?'Meses en mora':'Pendiente'}: ${l.map(c=>perL(c.periodo)).join(', ')}. Total ${money(sum(l,montoCuota))}. Toca para pagar.`,{tipo:'pagar',periodos:l.map(c=>c.periodo)});save();toast('Recordatorio enviado a '+casaNom(cid))}
+function recordarTodos(){const mor=morosos().filter(x=>casa(x.c.id).duenoId);mor.forEach(x=>notificar(duenoIds(x.c.id),'💳 Recordatorio: pagos en mora',`Meses en mora: ${x.m.map(c=>perL(c.periodo)).join(', ')}. Total ${money(x.total)}. Toca para pagar.`,{tipo:'pagar',periodos:x.m.map(c=>c.periodo)}));save();toast(`Recordatorio enviado a ${mor.length} casa(s)`)}
+const checksCuotas=(cid,incluirRev)=>{const l=cuotasCasa(cid).filter(c=>c.estado==='pendiente'||(incluirRev&&c.estado==='revision'));return l.length?l.map(c=>`<label class="chk"><input type="checkbox" name="per" value="${c.periodo}" checked><span class="grow">${perL(c.periodo)} ${vencida(c)?chip('Vencido','bad'):''}${c.estado==='revision'?chip('En revisión','info'):''}</span><b>${money(montoCuota(c))}</b></label>`).join(''):empty('No hay cuotas pendientes')};
+const perSel=()=>[...document.querySelectorAll('#ov [name=per]:checked')].map(x=>x.value);
+function enviarLinkCasa(cid){if(!duenoIds(cid).length)return toast('La casa no tiene propietario registrado');if(!pendCasa(cid).length)return toast('Esta casa está al día');sheet('Enviar link de pago · '+casaNom(cid),`<p class="note">El residente recibe la notificación con el detalle del mes. Al pagar, la captura se adjunta sola al mes correspondiente.</p><div class="card">${checksCuotas(cid)}</div><button class="btn block" onclick="enviarLinkOk('${cid}')">Enviar link</button>`)}
+function enviarLinkOk(cid){const ps=perSel();if(!ps.length)return toast('Selecciona al menos un mes');const cs=cuotasCasa(cid).filter(c=>ps.includes(c.periodo));const total=sum(cs,montoCuota);const conc='Cuota de mantenimiento '+cs.map(c=>perL(c.periodo)).join(', ');
+  notificar(duenoIds(cid),'🔗 Link de pago',`${conc}. Total ${money(total)}. Toca para pagar en línea.`,{tipo:'pagar',periodos:ps});save();
+  const d=usuario(casa(cid).duenoId);const tel=(d&&d.tel||'').replace(/\D/g,'');const txt=encodeURIComponent(`${DB.residencial.nombre} · ${casaNom(cid)}\n${conc}\nTotal: ${money(total)}\nPaga desde la app Mi Residencial, sección Pagos.`);
+  sheet('Link enviado',`<p>Se notificó a <b>${esc(d?d.nombre:'')}</b> con el detalle: ${esc(conc)} · <b>${money(total)}</b>.</p>${tel?`<a class="btn sec block" target="_blank" rel="noopener" href="https://wa.me/503${tel}?text=${txt}">Enviar también por WhatsApp</a>`:''}<button class="btn ghost block" onclick="closeSheet()">Listo</button>`)}
+function notifCasa(cid){sheet('Notificación a '+casaNom(cid),`<form onsubmit="notifCasaOk(event,'${cid}')"><label class="f">Título<input name="t" required></label><label class="f">Mensaje<textarea name="m" required></textarea></label><label class="f">Enviar a<select name="a"><option value="todos">Propietario e inquilinos</option><option value="dueno">Solo propietario</option></select></label><button class="btn block">Enviar</button></form>`)}
+function notifCasaOk(e,cid){e.preventDefault();const f=new FormData(e.target);const ids=f.get('a')==='dueno'?duenoIds(cid):usuariosCasa(cid);if(!ids.length)return toast('La casa no tiene usuarios registrados');notificar(ids,'📩 '+f.get('t'),f.get('m'));save();closeSheet();toast('Notificación enviada')}
+function efectivoCasa(cid){sheet('Pago en efectivo · '+casaNom(cid),`<div class="card">${checksCuotas(cid,true)}</div><label class="f">N° de recibo físico (opcional)<input id="refEf"></label><button class="btn block" onclick="efectivoOk('${cid}')">Registrar como pagado</button>`)}
+function efectivoOk(cid){const ps=perSel();if(!ps.length)return toast('Selecciona al menos un mes');const cs=cuotasCasa(cid).filter(c=>ps.includes(c.periodo));
+  DB.pagos.filter(p=>p.casaId===cid&&p.estado==='revision'&&p.periodos.some(x=>ps.includes(x))).forEach(p=>{p.estado='rechazado';p.nota='Reemplazado por pago en efectivo';cuotasCasa(cid).filter(c=>p.periodos.includes(c.periodo)&&!ps.includes(c.periodo)).forEach(c=>c.estado='pendiente')});
+  const p={id:uid(),casaId:cid,periodos:ps,monto:sum(cs,montoCuota),metodo:'efectivo',ref:$('#refEf').value,fecha:nowISO(),fechaAprob:nowISO(),estado:'aprobado',usuarioId:S.user.id,aprobadoPor:S.user.id,comprobante:null};
+  DB.pagos.unshift(p);cs.forEach(c=>c.estado='pagado');notificar(duenoIds(cid),'✅ Pago registrado',`Se registró tu pago en efectivo de ${ps.map(perL).join(', ')} por ${money(p.monto)}.`,{tab:'pagos'});save();closeSheet();render();toast('Pago registrado')}
+
+function vAdmPagos(){S.pseg=S.pseg||'validar';const rev=DB.pagos.filter(p=>p.estado==='revision');const mor=morosos();
+  let h=`<h2>Pagos</h2>${seg('pseg',[['validar',`Por validar (${rev.length})`],['mora',`Mora (${mor.length})`],['historial','Historial']])}`;
+  if(S.pseg==='validar')h+=rev.map(p=>pagoCard(p,true)).join('')||empty('No hay comprobantes pendientes');
+  if(S.pseg==='mora'){h+=`<div class="card"><div class="row"><div class="grow"><span class="muted sm">Total en mora</span><div style="font-size:22px;font-weight:800">${money(sum(mor,x=>x.total))}</div></div><button class="btn" onclick="recordarTodos()">Recordar a todos</button></div></div>`;
+    h+=mor.map(x=>`<div class="card"><div class="row"><div class="av">${esc(x.c.numero)}</div><div class="grow"><b>${casaNom(x.c.id)}</b><div class="sm muted">${esc(duenoNom(x.c.id))}</div></div><div class="right"><b>${money(x.total)}</b><div class="sm muted">${x.m.length} mes(es)</div></div></div><div class="months">${x.m.map(c=>chip(perL(c.periodo),'bad')).join('')}</div><div class="btns"><button class="btn smb ghost" onclick="recordarCasa('${x.c.id}')">Recordar</button><button class="btn smb sec" onclick="enviarLinkCasa('${x.c.id}')">Link de pago</button><button class="btn smb ghost" onclick="go('casa','${x.c.id}')">Ver casa</button></div></div>`).join('')||empty('Ninguna casa en mora 🎉')}
+  if(S.pseg==='historial')h+=DB.pagos.filter(p=>p.estado!=='revision').sort((a,b)=>b.fecha.localeCompare(a.fecha)).map(p=>pagoCard(p,true)).join('')||empty('Sin pagos registrados');
+  return h}
+function pagoCard(p,admin){const e=EST_P[p.estado];return `<div class="card"><div class="row"><div class="grow"><b>${admin?casaNom(p.casaId):METODO[p.metodo]}</b> ${chip(e.l,e.c)}<div class="muted sm">${admin?METODO[p.metodo]+' · ':''}${fFecha(p.fecha)}${p.ref?' · Ref. '+esc(p.ref):''}</div></div><b style="font-size:17px">${money(p.monto)}</b></div><div class="months">${p.periodos.map(x=>chip(perL(x))).join('')}</div>${p.nota?`<div class="sm" style="margin-top:6px;color:var(--bad)">Nota: ${esc(p.nota)}</div>`:''}<div class="btns">${p.comprobante?`<button class="btn ghost smb" onclick="verComp('${p.id}')">Ver comprobante</button>`:''}${admin&&p.estado==='revision'?`<button class="btn ok smb" onclick="aprobarPago('${p.id}')">Aprobar</button><button class="btn bad smb" onclick="rechazarPago('${p.id}')">Rechazar</button>`:''}${p.estado==='aprobado'?`<button class="btn sec smb" onclick="verRecibo('${p.id}')">Recibo</button>`:''}</div></div>`}
+const pago=id=>DB.pagos.find(p=>p.id===id);
+function verComp(id){const p=pago(id);verArchivo(p.comprobante,'Comprobante · '+casaNom(p.casaId))}
+function aprobarPago(id){const p=pago(id);p.estado='aprobado';p.fechaAprob=nowISO();p.aprobadoPor=S.user.id;cuotasCasa(p.casaId).forEach(c=>{if(p.periodos.includes(c.periodo))c.estado='pagado'});
+  notificar(duenoIds(p.casaId),'✅ Pago aprobado',`Tu pago de ${p.periodos.map(perL).join(', ')} por ${money(p.monto)} fue aprobado. Ya puedes ver tu recibo.`,{tab:'pagos'});save();render();toast('Pago aprobado')}
+function rechazarPago(id){const motivo=prompt('Motivo del rechazo (lo verá el residente):','El monto o la referencia no coinciden');if(motivo===null)return;const p=pago(id);p.estado='rechazado';p.nota=motivo;
+  cuotasCasa(p.casaId).forEach(c=>{if(p.periodos.includes(c.periodo)&&c.estado==='revision')c.estado='pendiente'});
+  notificar(duenoIds(p.casaId),'❌ Pago rechazado',`Tu comprobante de ${p.periodos.map(perL).join(', ')} fue rechazado: ${motivo}`,{tipo:'pagar',periodos:p.periodos});save();render();toast('Pago rechazado')}
+function verRecibo(id){const p=pago(id);const c=casa(p.casaId);const img=genImg({titulo:'Recibo de pago',sub:DB.residencial.nombre,filas:[['Recibo N°',p.id.toUpperCase()],['Casa',casaNom(p.casaId)+' · '+c.pasaje],['Propietario',duenoNom(p.casaId)],['Concepto','Cuota de mantenimiento: '+p.periodos.map(perL).join(', ')],['Monto',money(p.monto)],['Método',METODO[p.metodo]+(p.ref?' · Ref. '+p.ref:'')],['Fecha de aprobación',fFecha(p.fechaAprob||p.fecha)]],sello:'CANCELADO'});
+  sheet('Recibo',`<img class="thumb" src="${img}" alt="Recibo"><a class="btn block" download="recibo-${casaNom(p.casaId).replace(' ','')}.jpg" href="${img}">Descargar recibo</a>`)}
+
+/* Avisos (todos) */
+function vAvisos(){const adm=S.user.rol==='admin';const l=DB.avisos.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  return `<div class="row" style="margin-bottom:12px"><h2 class="grow" style="margin:0">Avisos</h2>${adm?`<button class="btn smb" onclick="nuevoAviso()">${ic('plus',16)} Nuevo aviso</button>`:''}</div>${l.map(a=>avisoCard(a,adm)).join('')||empty('Sin avisos')}`}
+function avisoCard(a,adm){const c=CAT[a.categoria]||CAT.general;return `<div class="card"><div class="row"><div class="av">${c.e}</div><div class="grow"><b>${esc(a.titulo)}</b><div class="muted sm">${c.l} · ${fFecha(a.fecha)}</div></div>${a.prioridad==='urgente'?chip('Urgente','bad'):''}</div><p style="margin:10px 0 0;white-space:pre-wrap">${esc(a.cuerpo)}</p>${a.cuando?`<div style="margin-top:8px">${chip('📆 '+fFecha(a.cuando),'info')}</div>`:''}${adm?`<div class="btns"><button class="btn ghost smb" onclick="borrarAviso('${a.id}')">Eliminar</button></div>`:''}</div>`}
+function nuevoAviso(){sheet('Nuevo aviso',`<form onsubmit="crearAviso(event)"><label class="f">Tipo<select name="cat">${Object.entries(CAT).map(([k,c])=>`<option value="${k}">${c.e} ${c.l}</option>`).join('')}</select></label><label class="f">Título<input name="t" required placeholder="Ej. Interrupción de energía"></label><label class="f">Mensaje<textarea name="m" required></textarea></label><label class="f">Fecha y hora del evento (opcional)<input name="cuando" type="datetime-local"></label><label class="f">Prioridad<select name="p"><option value="normal">Normal</option><option value="urgente">Urgente</option></select></label><label class="f">Enviar a<select name="a"><option value="todos">Todos (residentes, inquilinos y vigilancia)</option><option value="res">Solo residentes e inquilinos</option></select></label><button class="btn block">Publicar y notificar</button></form>`)}
+function crearAviso(e){e.preventDefault();const f=new FormData(e.target);const a={id:uid(),categoria:f.get('cat'),titulo:f.get('t'),cuerpo:f.get('m'),cuando:f.get('cuando')||'',prioridad:f.get('p'),fecha:nowISO()};DB.avisos.unshift(a);
+  const ids=DB.usuarios.filter(u=>u.activo&&u.rol!=='admin'&&(f.get('a')==='todos'||u.rol!=='vigilante')).map(u=>u.id);notificar(ids,(a.prioridad==='urgente'?'🚨 ':(CAT[a.categoria].e+' '))+a.titulo,a.cuerpo,{tab:'avisos'});save();closeSheet();render();toast(`Aviso publicado · ${ids.length} notificados`)}
+function borrarAviso(id){if(!confirm('¿Eliminar este aviso?'))return;DB.avisos=DB.avisos.filter(a=>a.id!==id);save();render()}
+
+function vAdmMas(){const sol=DB.solicitudes.filter(s=>s.estado==='pendiente').length;const rec=DB.reclamos.filter(r=>r.estado==='abierto').length;
+  return `<h2>Más</h2>${menuItem('houses','Perfil de la residencial',"go('residencial')")}${menuItem('card','Cobro a domicilio y cierres',"go('cobros')",(()=>{const n=DB.cierres.filter(c=>c.estado==='enviado').length+DB.visitasCobro.filter(v=>v.estado==='pendiente'&&!v.cobradorId).length;return n?String(n):''})())}${menuItem('log','Accesos y bitácora',"go('accesos')")}${menuItem('flag','Reclamos y reportes',"go('reclamos')",rec?rec+' nuevo(s)':'')}${menuItem('user','Solicitudes de registro',"go('solicitudes')",sol?String(sol):'')}${menuItem('shield','Usuarios de vigilancia',"go('vigilantes')")}${menuItem('gear','Cobros y link de pago',"go('config')")}
+  <h3>Sesión</h3>${menuItem('out','Cerrar sesión','salir()')}`}
+
+/* Accesos / bitácora (admin y vigilancia) */
+function ingresoRow({p,i}){const g=usuario(i.guardiaId);return `<div class="item"><div class="av">${TIPOS[p.tipo].e}</div><div class="grow"><b>${esc(p.nombre)}</b> <span class="muted sm">· ${casaNom(p.casaId)}</span><div class="sm muted">${TIPOS[p.tipo].l}${p.detalle?' · '+esc(p.detalle):''}</div><div class="sm">🚪 ${esc(portonNom(i.porton||p.porton))} · Entró ${fFecha(i.entrada)}${i.salida?' · salió '+hora(i.salida):''}${g?' · '+esc(g.nombre.split(' ')[0]):''}</div></div>${i.salida?chip('Salió','mut'):chip('Dentro','ok')}</div>`}
+function vBitacora(){S.fAcc=S.fAcc||ymd();S.fTipo=S.fTipo||'todos';const r=[];DB.pases.forEach(p=>p.ingresos.forEach(i=>{if(i.entrada.slice(0,10)===S.fAcc&&(S.fTipo==='todos'||p.tipo===S.fTipo))r.push({p,i})}));r.sort((a,b)=>b.i.entrada.localeCompare(a.i.entrada));
+  const den=DB.pases.filter(dentro);const adm=S.user.rol==='admin';
+  return `<h2>${adm?'Accesos y bitácora':'Bitácora'}</h2>${adm?`<h3>Dentro de la colonia ahora (${den.length})</h3>${den.map(p=>ingresoRow({p,i:p.ingresos[p.ingresos.length-1]})).join('')||empty('Nadie dentro')}<h3>Registro por día</h3>`:''}
+  <div class="two"><label class="f">Fecha<input type="date" value="${S.fAcc}" onchange="S.fAcc=this.value;render()"></label><label class="f">Tipo<select onchange="S.fTipo=this.value;render()"><option value="todos">Todos</option>${Object.entries(TIPOS).map(([k,t])=>`<option value="${k}" ${S.fTipo===k?'selected':''}>${t.l}</option>`).join('')}</select></label></div>
+  <p class="note">${r.length} ingreso(s)</p>${r.map(ingresoRow).join('')||empty('Sin ingresos en esta fecha')}
+  ${adm?`<h3>Pases vigentes hoy (${DB.pases.filter(vigenteHoy).length})</h3>${DB.pases.filter(vigenteHoy).map(p=>{const e=estadoPase(p);return `<div class="item"><div class="av">${TIPOS[p.tipo].e}</div><div class="grow"><b>${esc(p.nombre)}</b> <span class="sm muted">· ${casaNom(p.casaId)}</span><div class="sm muted">${vigencia(p)}</div></div>${chip(e.l,e.c)}</div>`}).join('')}`:''}`}
+
+/* Reclamos (admin y residente) */
+function reclamoItem(r){const e=EST_R[r.estado];return `<button class="item" onclick="verReclamo('${r.id}')"><div class="grow"><b>${esc(r.titulo)}</b><div class="sm muted">${esc(r.categoria)} · ${casaNom(r.casaId)} · ${fFecha(r.fecha)}</div></div>${chip(e.l,e.c)}</button>`}
+function vReclamos(){const adm=S.user.rol==='admin';S.rseg=S.rseg||'activos';
+  let l=adm?DB.reclamos:DB.reclamos.filter(r=>r.casaId===S.user.casaId);
+  l=l.filter(r=>S.rseg==='activos'?r.estado!=='resuelto':r.estado==='resuelto').sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  return `<div class="row"><h2 class="grow" style="margin:0">Reclamos y reportes</h2>${!adm?`<button class="btn smb" onclick="nuevoReclamo()">${ic('plus',16)} Reportar</button>`:''}</div>${!adm?`<p class="note">Reporta cualquier evento: daños, seguridad, ruido, basura. La administración te responde aquí.</p>`:''}${seg('rseg',[['activos','Activos'],['resueltos','Resueltos']])}${l.map(reclamoItem).join('')||empty('Sin reportes')}`}
+function nuevoReclamo(){sheet('Nuevo reporte',`<form onsubmit="crearReclamo(event)"><label class="f">Categoría<select name="cat">${CATR.map(c=>`<option>${c}</option>`).join('')}</select></label><label class="f">Título<input name="t" required></label><label class="f">Descripción<textarea name="d" required></textarea></label><label class="f">Ubicación<input name="u" placeholder="Ej. Pasaje B, frente a casa 9"></label><label class="f">Foto (opcional)<input name="foto" type="file" accept="image/*"></label><button class="btn block">Enviar reporte</button></form>`)}
+async function crearReclamo(e){e.preventDefault();const f=new FormData(e.target);let foto=null;try{foto=await leerArchivo(f.get('foto'))}catch(x){return toast('Foto no válida')}
+  const r={id:uid(),casaId:S.user.casaId,usuarioId:S.user.id,categoria:f.get('cat'),titulo:f.get('t'),descripcion:f.get('d'),ubicacion:f.get('u'),foto,estado:'abierto',fecha:nowISO(),hilo:[]};DB.reclamos.unshift(r);
+  notificar(admins(),'📝 Nuevo reporte: '+r.titulo,`${casaNom(r.casaId)} · ${r.categoria}`,{tab:'reclamos'});save();closeSheet();render();toast('Reporte enviado')}
+function verReclamo(id){const r=DB.reclamos.find(x=>x.id===id);const adm=S.user.rol==='admin';const a=usuario(r.usuarioId);
+  sheet(esc(r.titulo),`<div class="kv"><span>Estado</span><b>${chip(EST_R[r.estado].l,EST_R[r.estado].c)}</b><span>Categoría</span><b>${esc(r.categoria)}</b><span>Casa</span><b>${casaNom(r.casaId)}</b><span>Reportó</span><b>${esc(a?a.nombre:'')}</b><span>Fecha</span><b>${fFecha(r.fecha)}</b>${r.ubicacion?`<span>Ubicación</span><b>${esc(r.ubicacion)}</b>`:''}</div><p style="white-space:pre-wrap">${esc(r.descripcion)}</p>${r.foto?`<img class="thumb" src="${r.foto.data}" alt="Foto del reporte">`:''}
+  <h3>Seguimiento</h3>${r.hilo.map(m=>{const u=usuario(m.autor);return `<div class="thread"><b class="sm">${esc(u?u.nombre:'')}${u&&u.rol==='admin'?' · Administración':''}</b><div>${esc(m.texto)}</div><div class="muted sm">${fFecha(m.fecha)}</div></div>`}).join('')||'<p class="note">Sin respuestas aún.</p>'}
+  <form onsubmit="responderReclamo(event,'${r.id}')">${adm?`<label class="f">Cambiar estado<select name="est">${Object.entries(EST_R).map(([k,v])=>`<option value="${k}" ${r.estado===k?'selected':''}>${v.l}</option>`).join('')}</select></label>`:''}<label class="f">${adm?'Respuesta al residente':'Agregar comentario'}<textarea name="t" ${adm?'':'required'}></textarea></label><button class="btn block">${adm?'Guardar y notificar':'Enviar'}</button></form>`)}
+function responderReclamo(e,id){e.preventDefault();const f=new FormData(e.target);const r=DB.reclamos.find(x=>x.id===id);const t=String(f.get('t')||'').trim();const adm=S.user.rol==='admin';
+  if(t)r.hilo.push({autor:S.user.id,texto:t,fecha:nowISO()});
+  if(adm){const ne=f.get('est');const cambio=ne!==r.estado;r.estado=ne;if(cambio||t)notificar([r.usuarioId],'📝 Tu reporte: '+r.titulo,(cambio?'Estado: '+EST_R[ne].l+'. ':'')+t,{tab:'reclamos'})}
+  else notificar(admins(),'💬 Comentario en reporte',r.titulo+': '+t,{tab:'reclamos'});
+  save();closeSheet();render();toast('Guardado')}
+
+/* Solicitudes de registro */
+function vSolicitudes(){const p=DB.solicitudes.filter(s=>s.estado==='pendiente'),h=DB.solicitudes.filter(s=>s.estado!=='pendiente');
+  const mini=(s,k,l)=>s[k]&&s[k].data&&s[k].tipo==='img'?`<button style="border:0;background:none;padding:0;text-align:center" onclick="verDocSol('${s.id}','${k}')"><img src="${s[k].data}" alt="${l}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--line)"><div class="sm muted">${l}</div></button>`:`<div class="empty sm" style="padding:10px">Sin ${l.toLowerCase()}</div>`;
+  return `<h2>Solicitudes de registro</h2><p class="note">Compara el rostro de la foto en tiempo real con el DUI y la foto de perfil, revisa que cumplió el reto y que el documento de propiedad esté a su nombre.</p>${p.map(s=>{const c=casa(s.casaId);return `<div class="card"><div class="row">${avatar(s,48)}<div class="grow"><b>${esc(s.nombre)}</b><div class="sm muted">${casaNom(s.casaId)} · ${esc(c.pasaje)} · ${fFecha(s.fecha)}</div></div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">${mini(s,'selfie','En vivo')}${mini(s,'duiFoto','DUI')}${mini(s,'foto','Perfil')}</div>
+  ${s.selfie?`<div class="sm" style="margin-top:8px">${chip(s.selfie.metodo==='camara'?'Cámara en vivo':'Cámara del teléfono','info')} Reto: <b>${esc(s.selfie.reto)}</b> · ${fFecha(s.selfie.fecha)}</div>`:alertBox('warn','Sin foto en tiempo real','')}
+  <div class="kv" style="margin-top:10px"><span>Familia</span><b>${esc(s.familia||'—')}</b><span>DUI</span><b>${esc(s.dui)}</b><span>Teléfono</span><b>${esc(s.tel)}</b><span>Correo</span><b>${esc(s.email)}</b><span>Usuario</span><b>${esc(s.user)}</b></div>${c.duenoId?alertBox('warn','La casa ya tiene propietario',`Si apruebas, ${esc(duenoNom(c.id))} y sus inquilinos quedarán desactivados.`):''}<div class="btns"><button class="btn ghost smb" onclick="verDocSol('${s.id}','documento')">Ver documento de propiedad</button></div><div class="btns"><button class="btn ok" onclick="aprobarSol('${s.id}')">Aprobar</button><button class="btn bad" onclick="rechazarSol('${s.id}')">Rechazar</button></div></div>`}).join('')||empty('No hay solicitudes pendientes')}
+  ${h.length?`<h3>Historial</h3>${h.map(s=>`<div class="item">${avatar(s,40)}<div class="grow"><b>${esc(s.nombre)}</b><div class="sm muted">${casaNom(s.casaId)} · ${fFecha(s.fecha)}${s.motivo?' · '+esc(s.motivo):''}</div></div>${chip(s.estado==='aprobada'?'Aprobada':'Rechazada',s.estado==='aprobada'?'ok':'bad')}</div>`).join('')}`:''}`}
+function verDocSol(id,k){const s=DB.solicitudes.find(x=>x.id===id);verArchivo(s[k],{documento:'Documento de propiedad',duiFoto:'DUI',foto:'Foto de perfil',selfie:'Foto en tiempo real'}[k])}
+function aprobarSol(id){const s=DB.solicitudes.find(x=>x.id===id);const c=casa(s.casaId);if(DB.usuarios.some(u=>u.user.toLowerCase()===s.user.toLowerCase()))return toast('El usuario ya existe; rechaza y pide otro');
+  if(c.duenoId&&!confirm('La casa ya tiene propietario. ¿Reemplazarlo?'))return;
+  if(c.duenoId)DB.usuarios.forEach(u=>{if(u.id===c.duenoId||(u.rol==='inquilino'&&u.padreId===c.duenoId))u.activo=false});
+  const u={id:'u_'+uid(),rol:'residente',nombre:s.nombre,user:s.user,pass:s.pass,casaId:c.id,tel:s.tel,email:s.email,dui:s.dui,foto:s.foto||null,activo:true};DB.usuarios.push(u);c.duenoId=u.id;if(s.familia)c.familia=s.familia;c.codigo=genCodigo();s.estado='aprobada';
+  notificar([u.id],'🎉 Cuenta aprobada','Bienvenido(a). Ya puedes gestionar accesos, pagos y reportes de tu casa.');save();render();toast('Propietario aprobado. Ya puede ingresar con su usuario')}
+function rechazarSol(id){const m=prompt('Motivo del rechazo:','Documento no coincide con el propietario');if(m===null)return;const s=DB.solicitudes.find(x=>x.id===id);s.estado='rechazada';s.motivo=m;s.pass='';save();render();toast('Solicitud rechazada')}
+
+/* Vigilantes */
+function vVigilantes(){const l=DB.usuarios.filter(u=>u.rol==='vigilante');return `<div class="row" style="margin-bottom:12px"><h2 class="grow" style="margin:0">Vigilancia</h2><button class="btn smb" onclick="nuevoVig()">${ic('plus',16)} Vigilante</button></div><p class="note">Los vigilantes ven los pases de acceso, validan a la persona y marcan su ingreso y salida. El residente recibe el aviso al instante.</p>${l.map(u=>`<div class="item"><div class="av">${ic('shield',20)}</div><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">Usuario: ${esc(u.user)} · ${esc(u.turno||'')}</div></div><button class="btn smb ${u.activo?'ghost':'sec'}" onclick="toggleUser('${u.id}')">${u.activo?'Desactivar':'Activar'}</button></div>`).join('')||empty('Sin vigilantes')}`}
+function nuevoVig(){sheet('Nuevo vigilante',`<form onsubmit="crearUsuario(event,'vigilante')"><label class="f">Nombre<input name="nombre" required></label><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off"></label><label class="f">Turno<select name="turno"><option>Día (6:00–18:00)</option><option>Noche (18:00–6:00)</option><option>24 horas</option></select></label><div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none"></label><label class="f">Contraseña<input name="pass" required minlength="4"></label></div><button class="btn block">Crear usuario</button></form>`)}
+function crearUsuario(e,rol){e.preventDefault();const f=new FormData(e.target);if(!duiOk(String(f.get('dui')||'').trim()))return toast('DUI incompleto. Formato: 00000000-0');const un=String(f.get('user')).trim().toLowerCase();if(DB.usuarios.some(u=>u.user.toLowerCase()===un))return toast('Ese usuario ya existe');
+  const u={id:'u_'+uid(),rol,nombre:f.get('nombre'),user:un,pass:f.get('pass'),dui:f.get('dui')||'',tel:f.get('tel')||'',activo:true};
+  if(rol==='vigilante')u.turno=f.get('turno');if(rol==='admin')u.cargo=f.get('cargo');
+  if(rol==='inquilino'){u.casaId=S.user.casaId;u.padreId=S.user.id;u.hasta=f.get('hasta');if(u.hasta<ymd())return toast('La fecha de vigencia ya pasó')}
+  DB.usuarios.push(u);save();closeSheet();render();toast('Usuario creado: '+un)}
+function toggleUser(id){const u=usuario(id);u.activo=!u.activo;save();render()}
+
+/* Perfil de la residencial */
+function vResidencial(){S.rtab=S.rtab||'general';return `<h2>Perfil de la residencial</h2>${seg('rtab',[['general','Datos generales'],['equipo','Directiva y personal'],['portones','Portones']])}${S.rtab==='equipo'?resEquipo():S.rtab==='portones'?resPortones():resGeneral()}`}
+function resGeneral(){const r=DB.residencial;const fld=(k,l,v,t='text')=>`<label class="f">${l}<input name="${k}" type="${t}" value="${esc(v||'')}"></label>`;const pr=miembro('Presidente'),ad=miembro('Administrador(a)');
+  return `<div class="card"><div class="kv"><span>Casas</span><b>${DB.casas.length} (${DB.casas.filter(c=>c.duenoId).length} con propietario)</b><span>Polígonos</span><b>${[...new Set(DB.casas.map(c=>c.pasaje))].length}</b><span>Portones</span><b>${portones().length}</b><span>Presidente</span><b>${esc(pr?pr.nombre:'Sin asignar')}</b><span>Administración</span><b>${esc(ad?ad.nombre:'Sin asignar')}</b><span>Vigilantes</span><b>${DB.usuarios.filter(u=>u.rol==='vigilante'&&u.activo).length}</b></div></div>
+  <form onsubmit="guardarResidencial(event)"><h3>Datos generales</h3><div class="card">${fld('r.nombre','Nombre de la residencial',r.nombre)}${fld('r.direccion','Dirección',r.direccion)}${fld('r.municipio','Municipio / departamento',r.municipio)}${fld('r.registro','N° de registro / NIT de la asociación',r.registro)}<div class="two">${fld('r.telefono','Teléfono',r.telefono,'tel')}${fld('r.email','Correo',r.email,'email')}</div>${fld('v.telefono','Teléfono de portería',r.vigilancia.telefono,'tel')}</div>
+  <h3>Cuenta para transferencias</h3><div class="card">${fld('b.banco','Banco',r.banco.banco)}${fld('b.tipo','Tipo de cuenta',r.banco.tipo)}${fld('b.numero','Número de cuenta',r.banco.numero)}${fld('b.titular','Titular',r.banco.titular)}</div>
+  <button class="btn block">Guardar datos generales</button></form>`}
+function guardarResidencial(e){e.preventDefault();const r=DB.residencial;const map={r,b:r.banco,v:r.vigilancia};new FormData(e.target).forEach((v,k)=>{const[o,f]=k.split('.');map[o][f]=v});save();{const pr=PLAT.residenciales.find(x=>x.id===RES);if(pr){pr.nombre=r.nombre;pr.municipio=r.municipio;savePlat()}}render();toast('Datos guardados')}
+function resEquipo(){const eq=DB.residencial.equipo||(DB.residencial.equipo=[]);const vig=DB.usuarios.filter(u=>u.rol==='vigilante');
+  const item=m=>`<button class="item" onclick="editarMiembro('${m.id}')"><div class="av" style="border-radius:50%">${esc(m.nombre.split(' ').map(w=>w[0]).slice(0,2).join(''))}</div><div class="grow"><b>${esc(m.nombre)}</b><div class="sm muted">${esc(m.telefono||'Sin teléfono')}${m.email?' · '+esc(m.email):''}</div></div>${chip(esc(m.cargo),grupoDe(m.cargo)==='directiva'?'info':'')}</button>`;
+  const orden=(a,b)=>{const L=Object.values(CARGOS).flat();return L.indexOf(a.cargo)-L.indexOf(b.cargo)};
+  const adms=DB.usuarios.filter(u=>u.rol==='admin');
+  return `<h3 style="margin-top:4px">Usuarios con acceso de administración</h3>${adms.map(u=>`<div class="item"><div class="av" style="border-radius:50%">${ic('gear',18)}</div><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">${esc(u.cargo||'Administración')} · usuario ${esc(u.user)}</div></div>${u.id===S.user.id?chip('Tú','info'):`<button class="btn smb ${u.activo?'ghost':'sec'}" onclick="toggleUser('${u.id}')">${u.activo?'Desactivar':'Activar'}</button>`}</div>`).join('')}<button class="btn sec block" onclick="nuevoAdminUser()">${ic('plus',18)} Agregar usuario de administración</button>
+  <h3>Integrantes</h3><button class="btn block" onclick="editarMiembro()">${ic('plus',18)} Agregar integrante</button>${Object.keys(GRUPO).map(g=>`<h3>${GRUPO[g]}</h3>${eq.filter(m=>grupoDe(m.cargo)===g).sort(orden).map(item).join('')||empty('Sin integrantes')}`).join('')}
+  <h3>Cobradores</h3>${DB.usuarios.filter(u=>u.rol==='cobrador').map(u=>`<div class="item"><div class="av" style="border-radius:50%">${ic('card',18)}</div><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">${esc(u.tel||'')} · usuario ${esc(u.user)}</div></div><button class="btn smb ${u.activo?'ghost':'sec'}" onclick="toggleUser('${u.id}')">${u.activo?'Desactivar':'Activar'}</button></div>`).join('')||empty('Sin cobradores')}<button class="btn sec block" onclick="nuevoCob()">${ic('plus',18)} Agregar cobrador</button>
+  <h3>Vigilancia</h3>${vig.map(u=>`<div class="item"><div class="av" style="border-radius:50%">${ic('shield',18)}</div><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">${esc(u.turno||'')} · usuario ${esc(u.user)}</div></div>${chip(u.activo?'Activo':'Inactivo',u.activo?'ok':'mut')}</div>`).join('')||empty('Sin vigilantes')}<button class="btn sec block" onclick="nuevoVig()">${ic('plus',18)} Agregar vigilante</button>`}
+function editarMiembro(id){const m=id?(DB.residencial.equipo||[]).find(x=>x.id===id):{};const f=(k,l,t='text')=>`<label class="f">${l}<input name="${k}" type="${t}" value="${esc(m[k]||'')}" ${k==='nombre'?'required':''}${k==='dui'?' inputmode="numeric" maxlength="10" autocomplete="off" placeholder="00000000-0"':''}></label>`;
+  sheet(id?'Editar integrante':'Nuevo integrante',`<form onsubmit="guardarMiembro(event,'${id||''}')"><label class="f">Cargo<select name="cargo">${Object.keys(CARGOS).map(g=>`<optgroup label="${GRUPO[g]}">${CARGOS[g].map(c=>`<option ${m.cargo===c?'selected':''}>${c}</option>`).join('')}</optgroup>`).join('')}</select></label>${f('nombre','Nombre completo')}${f('dui','DUI')}<div class="two">${f('telefono','Teléfono','tel')}${f('email','Correo','email')}</div><button class="btn block">Guardar</button>${id?`<button type="button" class="btn bad block" onclick="borrarMiembro('${id}')">Quitar de la lista</button>`:''}</form>`)}
+function guardarMiembro(e,id){e.preventDefault();const f=new FormData(e.target);const o={cargo:f.get('cargo'),nombre:String(f.get('nombre')).trim(),dui:String(f.get('dui')).trim(),telefono:f.get('telefono'),email:f.get('email')};if(!duiOk(o.dui))return toast('DUI incompleto. Formato: 00000000-0');
+  const eq=DB.residencial.equipo;if(['Presidente','Vicepresidente','Secretario(a)','Tesorero(a)','Síndico'].includes(o.cargo)&&eq.some(m=>m.cargo===o.cargo&&m.id!==id))return toast('Ya hay un '+o.cargo.toLowerCase()+'. Edítalo o quítalo primero');
+  if(id)Object.assign(eq.find(m=>m.id===id),o);else eq.push(Object.assign({id:'e'+uid()},o));save();closeSheet();render();toast('Integrante guardado')}
+function borrarMiembro(id){DB.residencial.equipo=DB.residencial.equipo.filter(m=>m.id!==id);save();closeSheet();render();toast('Integrante quitado')}
+function resPortones(){const ps=portones();return `<div class="card row"><div class="av">${ic('doorin',20)}</div><div class="grow"><span class="muted sm">Accesos a la residencial</span><div style="font-size:22px;font-weight:800">${ps.length} portón${ps.length===1?'':'es'}</div></div><button class="btn smb" onclick="editarPorton()">${ic('plus',16)} Portón</button></div>
+  ${ps.map(p=>`<button class="item" onclick="editarPorton('${p.id}')"><div class="av">🚪</div><div class="grow"><b>${esc(p.nombre)}</b><div class="sm muted">${esc(p.tipo)} · ${esc(p.horario||'')}</div></div>${ic('chev',18)}</button>`).join('')||empty('Agrega al menos un portón')}
+  <h3>Por dónde ingresa cada tipo de acceso</h3><div class="card">${Object.entries(TIPOS).map(([k,t])=>`<label class="f">${t.e} ${t.l}<select onchange="DB.residencial.portonTipo['${k}']=this.value;save();toast('Guardado')">${ps.map(p=>`<option value="${p.id}" ${portonDe(k)===p.id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></label>`).join('')}<p class="note" style="margin:0">Cada pase nuevo indica por cuál portón debe entrar la persona. Vigilancia lo ve al validar.</p></div>`}
+function editarPorton(id){const p=id?portones().find(x=>x.id===id):{};sheet(id?'Editar portón':'Nuevo portón',`<form onsubmit="guardarPorton(event,'${id||''}')"><label class="f">Nombre<input name="nombre" required value="${esc(p.nombre||'')}" placeholder="Ej. Portón norte"></label><label class="f">Tipo de acceso<select name="tipo">${['Vehicular y peatonal','Vehicular','Peatonal'].map(t=>`<option ${p.tipo===t?'selected':''}>${t}</option>`).join('')}</select></label><label class="f">Horario<input name="horario" value="${esc(p.horario||'')}" placeholder="Ej. 24 horas"></label><button class="btn block">Guardar</button>${id&&portones().length>1?`<button type="button" class="btn bad block" onclick="borrarPorton('${id}')">Eliminar portón</button>`:''}</form>`)}
+function guardarPorton(e,id){e.preventDefault();const f=new FormData(e.target);const o={nombre:String(f.get('nombre')).trim(),tipo:f.get('tipo'),horario:f.get('horario')};const r=DB.residencial;r.portones=r.portones||[];r.portonTipo=r.portonTipo||{};
+  if(id)Object.assign(r.portones.find(p=>p.id===id),o);else{const n=Object.assign({id:'p'+uid()},o);r.portones.push(n);Object.keys(TIPOS).forEach(k=>{if(!r.portonTipo[k])r.portonTipo[k]=n.id})}save();closeSheet();render();toast('Portón guardado')}
+function borrarPorton(id){const r=DB.residencial;r.portones=r.portones.filter(p=>p.id!==id);Object.keys(r.portonTipo).forEach(k=>{if(r.portonTipo[k]===id)r.portonTipo[k]=r.portones[0].id});save();closeSheet();render();toast('Portón eliminado')}
+function vConfig(){const c=DB.config;return `<h2>Cobros y link de pago</h2><form onsubmit="guardarConfig(event)"><div class="card"><div class="two"><label class="f">Cuota mensual ($)<input name="cuota" type="number" step="0.01" min="0" value="${c.cuota}"></label><label class="f">Día de vencimiento<input name="diaVence" type="number" min="1" max="28" value="${c.diaVence}"></label></div><div class="two"><label class="f">Recargo por mes vencido ($)<input name="recargo" type="number" step="0.01" min="0" value="${c.recargo}"></label><label class="f">Recordar X días antes<input name="diasAviso" type="number" min="0" max="20" value="${c.diasAviso}"></label></div><p class="note">La nueva cuota aplica a los meses que se generen a partir de ahora.</p></div>
+  <h3>Pasarela de pago</h3><div class="card"><label class="f">URL del link de pago<input name="linkPago" type="url" placeholder="https://..." value="${esc(c.linkPago)}"></label><p class="note">Cuando elijas pasarela (Wompi, N1co u otra), pega aquí el link. La app le agrega monto, referencia y concepto (mes y casa). Si está vacío, la demo simula el pago.</p></div><button class="btn block">Guardar</button></form>`}
+function guardarConfig(e){e.preventDefault();const f=new FormData(e.target);const c=DB.config;c.cuota=+f.get('cuota');c.diaVence=Math.min(28,Math.max(1,+f.get('diaVence')));c.recargo=+f.get('recargo');c.diasAviso=+f.get('diasAviso');c.linkPago=String(f.get('linkPago')||'').trim();
+  const per=periodoActual();DB.cuotas.forEach(q=>{if(q.periodo>per&&q.estado==='pendiente')q.monto=c.cuota});save();render();toast('Configuración guardada')}
+
+/* =========================================================
+   RESIDENTE e INQUILINO
+   ========================================================= */
+function autCard(a){return `<div class="card" style="border:2px solid var(--warn)"><div class="row"><div class="av">${TIPOS[a.tipo].e}</div><div class="grow"><b>${esc(a.nombre)}</b><div class="sm muted">${TIPOS[a.tipo].l}${a.motivo?' · '+esc(a.motivo):''}</div><div class="sm">Vigilancia pide autorización · ${hora(a.fecha)}</div></div></div><div class="btns"><button class="btn ok" onclick="responderAut('${a.id}',true)">Autorizar ingreso</button><button class="btn bad" onclick="responderAut('${a.id}',false)">Rechazar</button></div></div>`}
+function responderAut(id,ok){const a=DB.autorizaciones.find(x=>x.id===id);if(a.estado!=='esperando')return toast('Ya fue respondida');a.estado=ok?'aprobado':'rechazado';a.respondidoPor=S.user.id;a.fechaResp=nowISO();
+  if(ok){const p={id:uid(),casaId:a.casaId,creadoPor:S.user.id,tipo:a.tipo,porton:a.porton||portonDe(a.tipo),nombre:a.nombre,dui:a.dui,detalle:a.motivo,placa:a.placa,horario:'',desde:ymd(),hasta:ymd(),pin:genPin(),estado:'activo',ingresos:[]};DB.pases.push(p);a.paseId=p.id}
+  notificar(vigilantes(),ok?'✅ Ingreso autorizado':'⛔ Ingreso rechazado',`${a.nombre} · ${casaNom(a.casaId)} · respondió ${S.user.nombre}`,{tab:'inicio'});save();render();toast(ok?'Ingreso autorizado':'Ingreso rechazado')}
+function vResInicio(){const u=S.user,cid=u.casaId;const aut=DB.autorizaciones.filter(a=>a.casaId===cid&&a.estado==='esperando');
+  const hoyP=DB.pases.filter(p=>p.casaId===cid&&(vigenteHoy(p)||dentro(p)));
+  let h=`<h2>Hola, ${esc(u.nombre.split(' ')[0])} 👋</h2>`;
+  h+=aut.map(autCard).join('');
+  if(u.rol==='residente'){const m=moraCasa(cid),p=pendCasa(cid);
+    if(m.length)h+=alertBox('bad',`Tienes ${m.length} mes(es) en mora · ${money(sum(m,montoCuota))}`,m.map(c=>perL(c.periodo)).join(', ')+'. Toca para pagar.',"S.sel=null;go('pagos')");
+    else if(p.length)h+=alertBox('warn','Cuota del mes pendiente',`Vence el ${fFecha(vence(periodoActual()))}. Toca para pagar.`,"go('pagos')");
+    else if(cuotasCasa(cid).some(q=>q.estado==='revision'))h+=alertBox('info','Pago en revisión','La administración está validando tu comprobante.',"go('pagos')");
+    else h+=alertBox('ok','Estás al día ✓','Gracias por mantener tus pagos al día.')}
+  h+=`<div class="tipos">${Object.entries(TIPOS).map(([k,t])=>`<button onclick="nuevoPase('${k}')"><span style="font-size:24px">${t.e}</span>${t.l}</button>`).join('')}</div>`;
+  h+=`<h3>Accesos de hoy</h3>${hoyP.map(paseItem).join('')||empty('Sin pases para hoy')}`;
+  const av=DB.avisos.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,2);
+  h+=`<h3>Últimos avisos</h3>${av.map(a=>avisoCard(a,false)).join('')||empty('Sin avisos')}`;
+  return h}
+function paseItem(p){const e=estadoPase(p);return `<button class="item" onclick="verPase('${p.id}')"><div class="av">${TIPOS[p.tipo].e}</div><div class="grow"><b>${esc(p.nombre)}</b><div class="sm muted">${TIPOS[p.tipo].l}${p.detalle?' · '+esc(p.detalle):''}</div><div class="sm">🚪 ${esc(portonNom(p.porton))}</div></div>${chip(e.l,e.c)}</button>`}
+function vAccesos(){const cid=S.user.casaId;S.aseg=S.aseg||'activos';const h=ymd();const ps=DB.pases.filter(p=>p.casaId===cid);
+  const act=ps.filter(p=>dentro(p)||(p.estado==='activo'&&p.hasta>=h));const hist=ps.filter(p=>!act.includes(p));const l=(S.aseg==='activos'?act:hist).slice().sort((a,b)=>b.desde.localeCompare(a.desde));
+  return `<h2>Control de acceso</h2><p class="note" style="margin-top:-6px">Crea un pase y comparte el PIN. Vigilancia lo valida al llegar y te avisa cuando la persona ingresa.</p><div class="tipos">${Object.entries(TIPOS).map(([k,t])=>`<button onclick="nuevoPase('${k}')"><span style="font-size:24px">${t.e}</span>${t.l}</button>`).join('')}</div>${seg('aseg',[['activos',`Activos (${act.length})`],['historial','Historial']])}${l.map(paseItem).join('')||empty('Sin pases')}`}
+function nuevoPase(tipo){const t=TIPOS[tipo],h=ymd();let f='';
+  if(tipo==='personal')f=`<label class="f">Nombre completo<input name="nombre" required></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="00000000-0"></label><label class="f">Oficio<select name="detalle">${OFICIOS.map(o=>`<option>${o}</option>`).join('')}</select></label></div><div class="two"><label class="f">Desde<input name="desde" type="date" value="${h}" required></label><label class="f">Hasta<input name="hasta" type="date" value="${addDays(h,6)}" required></label></div><label class="f">Horario (opcional)<input name="horario" placeholder="Lun–Sáb 7:00–16:00"></label><label class="f">Placa (opcional)<input name="placa"></label>`;
+  if(tipo==='entrega')f=`<label class="f">Servicio / restaurante<input name="detalle" required placeholder="Ej. Pedido de pizza"></label><label class="f">Nombre del repartidor (si lo sabes)<input name="nombre" placeholder="Repartidor"></label><label class="f">Fecha<input name="desde" type="date" value="${h}" required></label>`;
+  if(tipo==='correo')f=`<label class="f">Empresa de paquetería<input name="nombre" required placeholder="Ej. Courier"></label><label class="f">Detalle del paquete<input name="detalle" placeholder="Ej. Caja mediana a nombre de..."></label><div class="two"><label class="f">Desde<input name="desde" type="date" value="${h}" required></label><label class="f">Hasta<input name="hasta" type="date" value="${addDays(h,2)}" required></label></div>`;
+  if(tipo==='visita')f=`<label class="f">Nombre del visitante<input name="nombre" required></label><div class="two"><label class="f">DUI (opcional)<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off"></label><label class="f">Placa (opcional)<input name="placa"></label></div><div class="two"><label class="f">Desde<input name="desde" type="date" value="${h}" required></label><label class="f">Hasta<input name="hasta" type="date" value="${h}" required></label></div><label class="f">Motivo (opcional)<input name="detalle"></label>`;
+  sheet(t.e+' '+t.l,`<form onsubmit="crearPase(event,'${tipo}')">${f}<div class="alert info"><b>🚪 Ingresará por: ${esc(portonNom(portonDe(tipo)))}</b><p>Definido por la administración para este tipo de acceso.</p></div>${S.user.rol==='inquilino'?`<p class="note">Tu acceso como inquilino vence el ${fFecha(S.user.hasta)}; el pase no puede pasar de esa fecha.</p>`:''}<button class="btn block">Crear pase</button></form>`)}
+function crearPase(e,tipo){e.preventDefault();const f=new FormData(e.target);const g=k=>String(f.get(k)||'').trim();
+  const p={id:uid(),casaId:S.user.casaId,creadoPor:S.user.id,tipo,nombre:g('nombre')||(tipo==='entrega'?'Repartidor':''),dui:g('dui'),detalle:g('detalle'),placa:g('placa'),horario:g('horario'),desde:g('desde'),hasta:g('hasta')||g('desde'),pin:genPin(),porton:portonDe(tipo),estado:'activo',ingresos:[]};
+  if(!duiOk(p.dui))return toast('DUI incompleto. Formato: 00000000-0');if(p.hasta<p.desde)return toast('La fecha final es anterior a la inicial');if(p.hasta<ymd())return toast('El pase ya estaría vencido');
+  if(S.user.rol==='inquilino'&&p.hasta>S.user.hasta)return toast('No puede pasar de tu fecha de vigencia');
+  DB.pases.push(p);save();render();verPase(p.id,true)}
+function textoPase(p){return `Pase de acceso · ${DB.residencial.nombre}\n${casaNom(p.casaId)}\n${TIPOS[p.tipo].l}: ${p.nombre}\nVálido: ${vigencia(p)}${p.horario?' ('+p.horario+')':''}\nPIN: ${p.pin}\nPresenta tu DUI en portería.`}
+function verPase(id,nuevo){const p=DB.pases.find(x=>x.id===id);const e=estadoPase(p);const cr=usuario(p.creadoPor);const act=p.estado==='activo'&&p.hasta>=ymd();
+  sheet(TIPOS[p.tipo].e+' '+esc(p.nombre),`${nuevo?alertBox('ok','Pase creado','Compártelo con la persona. Vigilancia lo verá en portería.'):''}<div class="card" style="text-align:center"><div class="muted sm">PIN de acceso</div><div class="pin" style="font-size:34px">${p.pin}</div>${chip(e.l,e.c)}</div>
+  <div class="kv"><span>Tipo</span><b>${TIPOS[p.tipo].l}</b>${p.detalle?`<span>Detalle</span><b>${esc(p.detalle)}</b>`:''}${p.dui?`<span>DUI</span><b>${esc(p.dui)}</b>`:''}${p.placa?`<span>Placa</span><b>${esc(p.placa)}</b>`:''}<span>Ingresa por</span><b>🚪 ${esc(portonNom(p.porton))}</b><span>Vigencia</span><b>${vigencia(p)}</b>${p.horario?`<span>Horario</span><b>${esc(p.horario)}</b>`:''}<span>Creado por</span><b>${esc(cr?cr.nombre:'')}</b></div>
+  ${p.ingresos.length?`<h3>Ingresos</h3>${p.ingresos.slice().reverse().slice(0,10).map(i=>`<div class="chk"><span class="grow">${fFecha(i.entrada)}</span><span class="sm muted">${i.salida?'salió '+hora(i.salida):'dentro'}</span></div>`).join('')}`:''}
+  <div class="btns">${act?`<button class="btn" onclick="compartirPase('${p.id}')">${ic('share',18)} Compartir</button><button class="btn bad" onclick="cancelarPase('${p.id}')">Cancelar pase</button>`:''}</div>`)}
+async function compartirPase(id){const p=DB.pases.find(x=>x.id===id);const t=textoPase(p);try{if(navigator.share){await navigator.share({text:t});return}}catch(e){return}try{await navigator.clipboard.writeText(t);toast('Copiado: pégalo en WhatsApp')}catch(e){window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}}
+function cancelarPase(id){if(!confirm('¿Cancelar este pase? El PIN dejará de funcionar.'))return;const p=DB.pases.find(x=>x.id===id);p.estado='cancelado';save();closeSheet();render();toast('Pase cancelado')}
+
+function vResPagos(){const cid=S.user.casaId;const cs=cuotasCasa(cid);const pend=cs.filter(c=>c.estado==='pendiente');
+  if(!S.sel)S.sel=pend.map(c=>c.periodo);S.sel=S.sel.filter(p=>pend.some(c=>c.periodo===p));
+  const sel=pend.filter(c=>S.sel.includes(c.periodo));const total=sum(sel,montoCuota);const m=moraCasa(cid);const b=DB.residencial.banco;
+  let h=`<h2>Mis pagos</h2>`;
+  if(m.length)h+=alertBox('bad',`En mora: ${m.length} mes(es) · ${money(sum(m,montoCuota))}`,`${m.map(c=>perL(c.periodo)).join(', ')}. Incluye recargo de ${money(DB.config.recargo)} por mes vencido.`);
+  else if(pend.length)h+=alertBox('warn','Cuota pendiente',`Vence el ${fFecha(vence(periodoActual()))}.`);
+  else h+=alertBox('ok','Estás al día ✓','');
+  h+=`<h3>Selecciona los meses a pagar</h3><div class="card">${cs.slice().reverse().slice(0,12).map(c=>{if(c.estado==='pendiente')return `<label class="chk"><input type="checkbox" ${S.sel.includes(c.periodo)?'checked':''} onchange="toggleSel('${c.periodo}')"><span class="grow">${perL(c.periodo)} ${vencida(c)?chip('Vencido','bad'):chip('Pendiente','warn')}</span><b>${money(montoCuota(c))}</b></label>`;
+    const st=c.estado==='pagado'?['Pagado','ok']:['En revisión','info'];return `<div class="chk"><span style="width:22px;text-align:center">${c.estado==='pagado'?'✓':'⏳'}</span><span class="grow muted">${perL(c.periodo)} ${chip(st[0],st[1])}</span><b class="muted">${money(c.monto)}</b></div>`}).join('')}</div>`;
+  if(pend.length)h+=`<div class="card"><div class="row"><span class="grow">Total seleccionado (${sel.length} mes${sel.length===1?'':'es'})</span><b style="font-size:21px">${money(total)}</b></div><div class="btns"><button class="btn" onclick="pagarLink()">Pagar en línea</button><button class="btn sec" onclick="pagarTransf()">Ya transferí · adjuntar</button></div><button class="btn ghost block" onclick="pedirCobro('${cid}')">🧾 Que el cobrador pase a mi casa</button></div>`;
+  h+=visitaRes(cid);
+  h+=`<h3>Cuenta para transferencias</h3><div class="card kv"><span>Banco</span><b>${esc(b.banco)}</b><span>Tipo</span><b>${esc(b.tipo)}</b><span>Número</span><b>${esc(b.numero)}</b><span>Titular</span><b>${esc(b.titular)}</b><span>Concepto</span><b>${casaNom(cid)} + mes(es)</b></div>`;
+  const ps=DB.pagos.filter(p=>p.casaId===cid).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  h+=`<h3>Historial de pagos</h3>${ps.map(p=>pagoCard(p,false)).join('')||empty('Sin pagos registrados')}`;return h}
+function toggleSel(p){S.sel=S.sel.includes(p)?S.sel.filter(x=>x!==p):[...S.sel,p];render()}
+function selCuotas(){return pendCasa(S.user.casaId).filter(c=>S.sel&&S.sel.includes(c.periodo))}
+function detalleCobro(cs){const conc='Cuota de mantenimiento: '+cs.map(c=>perL(c.periodo)).join(', ');return{conc,total:sum(cs,montoCuota)}}
+function pagarLink(){const cs=selCuotas();if(!cs.length)return toast('Selecciona al menos un mes');const c=casa(S.user.casaId);const{conc,total}=detalleCobro(cs);const ref='RES'+c.numero+'-'+String(Date.now()).slice(-6);
+  S.link={periodos:cs.map(x=>x.periodo),total,ref,conc};
+  sheet('Link de pago',`<div class="card" style="border:2px solid var(--pri)"><div class="muted sm" style="margin-bottom:8px">Detalle del cobro</div><div class="kv"><span>Residencial</span><b>${esc(DB.residencial.nombre)}</b><span>Casa</span><b>${casaNom(c.id)} · ${esc(c.pasaje)}</b><span>Concepto</span><b>${esc(conc)}</b><span>Monto</span><b style="font-size:19px">${money(total)}</b><span>Referencia</span><b>${ref}</b></div></div>
+  <ol class="note" style="padding-left:18px"><li>Toca <b>Ir a pagar</b> y completa el pago en la pasarela.</li><li>Regresa y toca <b>Ya pagué</b>: la app genera la captura con este detalle y la adjunta al mes correspondiente.</li></ol>
+  <button class="btn block" onclick="abrirLink()">Ir a pagar</button><button class="btn sec block" onclick="confirmarLink()">Ya pagué · adjuntar captura</button>`)}
+function abrirLink(){const l=DB.config.linkPago,L=S.link;if(!l)return toast('Demo: aún no hay pasarela configurada. Toca “Ya pagué” para simular.');
+  try{const u=new URL(l);u.searchParams.set('monto',L.total.toFixed(2));u.searchParams.set('referencia',L.ref);u.searchParams.set('concepto',L.conc+' · '+casaNom(S.user.casaId));window.open(u.toString(),'_blank')}catch(e){window.open(l,'_blank')}}
+function confirmarLink(){const L=S.link,cid=S.user.casaId;if(!L)return;
+  const img=genImg({titulo:'Pago en línea',sub:DB.residencial.nombre,filas:[['Casa',casaNom(cid)+' · '+duenoNom(cid)],['Concepto',L.conc],['Monto',money(L.total)],['Referencia',L.ref],['Fecha',fFecha(nowISO())]],sello:'PAGADO',color:'#1e3a8a'});
+  registrarPago({casaId:cid,periodos:L.periodos,monto:L.total,metodo:'link',ref:L.ref,comprobante:{tipo:'img',nombre:'captura-'+L.ref+'.jpg',data:img}});S.link=null;
+  sheet('Pago enviado a validación',`<img class="thumb" src="${img}" alt="Captura del pago"><p>La captura quedó adjunta a <b>${L.periodos.map(perL).join(', ')}</b>. Te avisaremos cuando la administración la apruebe.</p><button class="btn block" onclick="closeSheet()">Listo</button>`)}
+function pagarTransf(){const cs=selCuotas();if(!cs.length)return toast('Selecciona al menos un mes');const{conc,total}=detalleCobro(cs);
+  sheet('Adjuntar transferencia',`<div class="card"><div class="kv"><span>Meses</span><b>${cs.map(c=>perL(c.periodo)).join(', ')}</b><span>Total</span><b>${money(total)}</b></div></div><form onsubmit="enviarTransf(event)"><label class="f">Foto o PDF del comprobante<input name="arch" type="file" accept="image/*,application/pdf" required></label><div class="two"><label class="f">Banco de origen<input name="banco"></label><label class="f">N° de referencia<input name="ref" required></label></div><label class="f">Fecha de la transferencia<input name="fecha" type="date" value="${ymd()}" required></label><button class="btn block">Enviar comprobante</button></form>`)}
+async function enviarTransf(e){e.preventDefault();const f=new FormData(e.target);let comp;try{comp=await leerArchivo(f.get('arch'))}catch(x){return toast('Formato no válido. Usa foto o PDF')}if(!comp)return toast('Adjunta el comprobante');
+  const cs=selCuotas();registrarPago({casaId:S.user.casaId,periodos:cs.map(c=>c.periodo),monto:sum(cs,montoCuota),metodo:'transferencia',ref:f.get('ref'),banco:f.get('banco'),fechaTransf:f.get('fecha'),comprobante:comp});closeSheet();toast('Comprobante enviado para validación')}
+function registrarPago(o){const p=Object.assign({id:uid(),fecha:nowISO(),estado:'revision',usuarioId:S.user.id},o);DB.pagos.unshift(p);
+  cuotasCasa(o.casaId).forEach(c=>{if(o.periodos.includes(c.periodo))c.estado='revision'});
+  notificar(admins(),'💳 Pago por validar',`${casaNom(o.casaId)} · ${o.periodos.map(perL).join(', ')} · ${money(o.monto)} (${METODO[o.metodo]})`,{tab:'pagos'});S.sel=null;save();render()}
+
+function vInquilinos(){const l=DB.usuarios.filter(u=>u.rol==='inquilino'&&u.padreId===S.user.id);
+  return `<h2>Inquilinos</h2><p class="note">Si rentas tu casa, crea el acceso de tus inquilinos. Pueden crear pases de acceso y ver avisos, pero no pueden crear usuarios ni ver pagos. Su acceso vence solo en la fecha que indiques.</p><button class="btn block" onclick="nuevoInq()">${ic('plus',18)} Agregar inquilino</button><h3>Registrados</h3>${l.map(u=>`<div class="item"><div class="av">${ic('user',20)}</div><div class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">Usuario: ${esc(u.user)} · hasta ${fFecha(u.hasta)}</div></div><button class="btn smb ${u.activo?'ghost':'sec'}" onclick="toggleUser('${u.id}')">${u.activo?'Desactivar':'Activar'}</button></div>`).join('')||empty('Sin inquilinos')}`}
+function nuevoInq(){sheet('Nuevo inquilino',`<form onsubmit="crearUsuario(event,'inquilino')"><label class="f">Nombre completo<input name="nombre" required></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off" required></label><label class="f">Teléfono<input name="tel" inputmode="tel"></label></div><label class="f">Acceso válido hasta (fin del contrato)<input name="hasta" type="date" value="${addDays(ymd(),365)}" required></label><div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none"></label><label class="f">Contraseña<input name="pass" required minlength="4"></label></div><button class="btn block">Crear acceso</button></form>`)}
+function vResMas(){const r=S.user.rol;return `<h2>Más</h2>${r==='residente'?menuItem('flag','Reclamos y reportes',"go('reclamos')")+menuItem('users','Inquilinos',"go('inquilinos')"):''}${menuItem('user','Mi perfil y contactos',"go('perfil')")}<h3>Sesión</h3>${menuItem('out','Cerrar sesión','salir()')}`}
+function vPerfil(){const u=S.user,r=DB.residencial;return `<h2>Mi perfil</h2><div class="row" style="margin-bottom:12px">${avatar(u,64)}<label class="btn ghost smb">Cambiar foto<input type="file" accept="image/*" hidden onchange="cambiarFoto(this)"></label></div><div class="card kv"><span>Nombre</span><b>${esc(u.nombre)}</b><span>Rol</span><b>${ROL[u.rol]}</b>${u.casaId?`<span>Casa</span><b>${casaNom(u.casaId)}</b>`:''}<span>Usuario</span><b>${esc(u.user)}</b>${u.hasta?`<span>Acceso hasta</span><b>${fFecha(u.hasta)}</b>`:''}</div>
+  <h3>Cambiar contraseña</h3><form class="card" onsubmit="cambiarPass(event)"><label class="f">Contraseña actual<input name="a" type="password" required></label><label class="f">Nueva contraseña<input name="n" type="password" minlength="4" required></label><button class="btn block">Actualizar</button></form>
+  <h3>Contactos de la residencial</h3>${[['Portería / vigilancia',r.vigilancia.telefono],...(r.equipo||[]).filter(m=>['Presidente','Vicepresidente','Tesorero(a)','Administrador(a)'].includes(m.cargo)&&m.telefono).map(m=>[m.cargo+' · '+m.nombre,m.telefono])].map(([l,t])=>`<a class="item" style="text-decoration:none" href="tel:${esc(t)}"><span class="av">${ic('phone',18)}</span><div class="grow"><b>${esc(l)}</b><div class="sm muted">${esc(t)}</div></div></a>`).join('')}`}
+async function cambiarFoto(inp){try{const f=await leerArchivo(inp.files[0]);if(!f)return;S.user.foto=f;save();render();toast('Foto actualizada')}catch(e){toast('Foto no válida')}}
+function cambiarPass(e){e.preventDefault();const f=new FormData(e.target);if(f.get('a')!==S.user.pass)return toast('La contraseña actual no es correcta');S.user.pass=f.get('n');save();e.target.reset();toast('Contraseña actualizada')}
+
+/* =========================================================
+   VIGILANCIA
+   ========================================================= */
+function vVigInicio(){const h=ymd();const esp=DB.autorizaciones.filter(a=>a.estado==='esperando');const resp=DB.autorizaciones.filter(a=>a.estado!=='esperando'&&(a.fechaResp||'').slice(0,10)===h).sort((a,b)=>b.fechaResp.localeCompare(a.fechaResp)).slice(0,5);
+  if(!S.gate){try{S.gate=localStorage.getItem(KEY+'_gate')}catch(e){}S.gate=S.gate||'todos'}const G=p=>S.gate==='todos'||p.porton===S.gate;const den=DB.pases.filter(p=>dentro(p)&&G(p));const exp=DB.pases.filter(p=>vigenteHoy(p)&&!dentro(p)&&G(p));
+  return `<h2>Portería</h2><label class="f">Estoy en<select onchange="S.gate=this.value;try{localStorage.setItem(KEY+'_gate',this.value)}catch(e){};render()"><option value="todos">Todos los portones</option>${portones().map(p=>`<option value="${p.id}" ${S.gate===p.id?'selected':''}>${esc(p.nombre)}</option>`).join('')}</select></label><input id="qv" placeholder="Buscar por PIN, nombre o N° de casa" inputmode="search" oninput="document.getElementById('rv').innerHTML=buscarVig(this.value)"><div id="rv" style="margin-top:8px"></div>
+  ${esp.length?`<h3>Esperando respuesta del residente</h3>${esp.map(a=>`<div class="item"><div class="av">${TIPOS[a.tipo].e}</div><div class="grow"><b>${esc(a.nombre)}</b><div class="sm muted">${casaNom(a.casaId)} · enviado ${hora(a.fecha)}</div></div>${chip('Esperando','warn')}</div>`).join('')}`:''}
+  ${resp.length?`<h3>Respuestas de residentes</h3>${resp.map(a=>`<div class="item"><div class="av">${TIPOS[a.tipo].e}</div><div class="grow"><b>${esc(a.nombre)}</b><div class="sm muted">${casaNom(a.casaId)} · ${hora(a.fechaResp)}</div></div>${a.estado==='aprobado'?`<button class="btn ok smb" onclick="verPaseVig('${a.paseId}')">Autorizado ›</button>`:chip('Rechazado','bad')}</div>`).join('')}`:''}
+  <h3>Dentro de la colonia (${den.length})</h3>${den.map(paseItemVig).join('')||empty('Nadie dentro')}
+  <h3>Esperados hoy (${exp.length})</h3>${exp.map(paseItemVig).join('')||empty('Sin pases para hoy')}`}
+function paseItemVig(p){const e=estadoPase(p);return `<button class="item" onclick="verPaseVig('${p.id}')"><div class="av">${TIPOS[p.tipo].e}</div><div class="grow"><b>${esc(p.nombre)}</b> <span class="sm muted">· ${casaNom(p.casaId)}</span><div class="sm muted">${TIPOS[p.tipo].l}${p.detalle?' · '+esc(p.detalle):''}</div><div class="sm">🚪 ${esc(portonNom(p.porton))}</div></div>${chip(e.l,e.c)}</button>`}
+function buscarVig(q){q=q.trim().toLowerCase();if(!q)return'';const l=DB.pases.filter(p=>(vigenteHoy(p)||dentro(p))&&(p.pin===q||p.nombre.toLowerCase().includes(q)||('casa '+casa(p.casaId).numero)===q||casa(p.casaId).numero===q));
+  const inv=DB.pases.filter(p=>p.pin===q&&!vigenteHoy(p)&&!dentro(p));
+  return l.map(paseItemVig).join('')+(inv.length?alertBox('bad','PIN no válido hoy',`Pase ${estadoPase(inv[0]).l.toLowerCase()} · ${casaNom(inv[0].casaId)}. No permitir el ingreso; usa “Sin pase” para pedir autorización.`):'')+(!l.length&&!inv.length?empty('Sin coincidencias. Usa “Sin pase” para pedir autorización al residente.'):'')}
+function verPaseVig(id){const p=DB.pases.find(x=>x.id===id);if(!p)return;const e=estadoPase(p);const cr=usuario(p.creadoPor);const d=dentro(p),ok=vigenteHoy(p);
+  sheet(TIPOS[p.tipo].e+' Validar acceso',`<div style="text-align:center;margin-bottom:12px"><div style="font-size:22px;font-weight:800">${esc(p.nombre)}</div><div class="muted">${casaNom(p.casaId)} · ${esc(casa(p.casaId).pasaje)}</div><div style="margin-top:6px">${chip(e.l,e.c)}</div></div>
+  <div class="card kv"><span>Tipo</span><b>${TIPOS[p.tipo].l}</b>${p.detalle?`<span>Detalle</span><b>${esc(p.detalle)}</b>`:''}<span>DUI</span><b>${esc(p.dui||'No registrado')}</b>${p.placa?`<span>Placa</span><b>${esc(p.placa)}</b>`:''}<span>Ingresa por</span><b>🚪 ${esc(portonNom(p.porton))}</b><span>Vigencia</span><b>${vigencia(p)}</b>${p.horario?`<span>Horario</span><b>${esc(p.horario)}</b>`:''}<span>Autorizó</span><b>${esc(cr?cr.nombre:'')} (${cr?ROL[cr.rol]:''})</b><span>PIN</span><b>${p.pin}</b></div>
+  ${S.gate&&S.gate!=='todos'&&p.porton&&p.porton!==S.gate&&!d?alertBox('warn','Portón diferente','Este acceso está asignado a '+esc(portonNom(p.porton))+'. Indícale a la persona por dónde debe entrar o confirma con el residente.'):''}${!d&&ok?`<p class="note">✔ Pide el DUI y verifica que el nombre${p.dui?' y número':''} coincidan antes de marcar el ingreso.</p><button class="btn ok block big-ok" onclick="marcarIngreso('${p.id}')">${ic('check',20)} La persona ingresó a la colonia</button>`:''}
+  ${d?`<button class="btn block big-ok" onclick="marcarSalida('${p.id}')">${ic('out',20)} Marcar salida</button>`:''}
+  ${!d&&!ok?alertBox('bad','Pase no vigente hoy','No permitir el ingreso sin autorización del residente.'):''}`)}
+function marcarIngreso(id){const p=DB.pases.find(x=>x.id===id);if(dentro(p))return;const t=nowISO(),g=(S.gate&&S.gate!=='todos')?S.gate:p.porton;p.ingresos.push({entrada:t,salida:null,guardiaId:S.user.id,porton:g});
+  notificar(usuariosCasa(p.casaId),'✅ Ingresó: '+p.nombre,`${TIPOS[p.tipo].l} ingresó por ${portonNom(g)} a las ${hora(t)} · Validado por ${S.user.nombre}`,{tab:'accesos'});save();closeSheet();render();toast('Ingreso registrado · residente notificado')}
+function marcarSalida(id){const p=DB.pases.find(x=>x.id===id);const l=p.ingresos[p.ingresos.length-1];if(!l||l.salida)return;l.salida=nowISO();
+  notificar(usuariosCasa(p.casaId),'👋 Salió: '+p.nombre,`Salió de la colonia a las ${hora(l.salida)}`,{tab:'accesos'});save();closeSheet();render();toast('Salida registrada')}
+function vSinPase(){return `<h2>Persona sin pase</h2><p class="note" style="margin-top:-6px">Envía una solicitud al residente. Cuando autorice, aparecerá en Portería para marcar el ingreso.</p><form class="card" onsubmit="solicitarAut(event)"><label class="f">Casa<select name="casa" required>${DB.casas.filter(c=>c.duenoId).map(c=>`<option value="${c.id}">${casaNom(c.id)} · ${esc(c.pasaje)} · ${esc(duenoNom(c.id))}</option>`).join('')}</select></label><label class="f">Tipo<select name="tipo">${Object.entries(TIPOS).map(([k,t])=>`<option value="${k}">${t.e} ${t.l}</option>`).join('')}</select></label><label class="f">Nombre / empresa<input name="nombre" required></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off"></label><label class="f">Placa<input name="placa"></label></div><label class="f">Portón<select name="porton">${portones().map(x=>`<option value="${x.id}" ${S.gate===x.id?'selected':''}>${esc(x.nombre)}</option>`).join('')}</select></label><label class="f">Motivo<input name="motivo" placeholder="Ej. Entrega de paquete"></label><button class="btn block">Pedir autorización</button></form>`}
+function solicitarAut(e){e.preventDefault();const f=new FormData(e.target);if(!duiOk(String(f.get('dui')||'').trim()))return toast('DUI incompleto. Formato: 00000000-0');const a={id:uid(),casaId:f.get('casa'),nombre:f.get('nombre'),dui:f.get('dui'),tipo:f.get('tipo'),motivo:f.get('motivo'),placa:f.get('placa'),porton:f.get('porton'),estado:'esperando',fecha:nowISO(),guardiaId:S.user.id};DB.autorizaciones.unshift(a);
+  notificar(usuariosCasa(a.casaId),TIPOS[a.tipo].e+' Autorización solicitada',`Vigilancia pide autorizar el ingreso de: ${a.nombre}${a.motivo?' ('+a.motivo+')':''}.`,{tab:'inicio'});save();go('inicio');toast('Solicitud enviada al residente')}
+function vVigMas(){return `<h2>Más</h2>${menuItem('user','Mi perfil y contactos',"go('perfil')")}<h3>Sesión</h3>${menuItem('out','Cerrar sesión','salir()')}`}
+
+/* ---------------- Mapa de vistas ---------------- */
+const VIEWS={
+  admin:{inicio:vAdmInicio,casas:vAdmCasas,casa:vAdmCasa,pagos:vAdmPagos,avisos:vAvisos,mas:vAdmMas,accesos:vBitacora,reclamos:vReclamos,solicitudes:vSolicitudes,vigilantes:vVigilantes,residencial:vResidencial,config:vConfig},
+  residente:{inicio:vResInicio,accesos:vAccesos,pagos:vResPagos,avisos:vAvisos,mas:vResMas,reclamos:vReclamos,inquilinos:vInquilinos,perfil:vPerfil},
+  inquilino:{inicio:vResInicio,accesos:vAccesos,avisos:vAvisos,mas:vResMas,perfil:vPerfil},
+  vigilante:{inicio:vVigInicio,sinpase:vSinPase,bitacora:vBitacora,avisos:vAvisos,mas:vVigMas,perfil:vPerfil}};
+
+/* =========================================================
+   PLATAFORMA (varias residenciales)
+   ========================================================= */
+const PLANES={basico:{l:'Básico',pc:0.75,inc:'Accesos, pagos, avisos, reclamos'},pro:{l:'Profesional',pc:1.25,inc:'Todo lo básico + cobrador a domicilio, cierres de caja y reportes'}};
+const EST_RES={activa:{l:'Activa',c:'ok'},prueba:{l:'En prueba',c:'info'},suspendida:{l:'Suspendida',c:'bad'}};
+function seedPlat(){const hoy=ymd();return {version:1,ultima:'r1',
+  superadmins:[{id:'sa1',rol:'superadmin',nombre:'Miguel',user:'plataforma',pass:'1234',activo:true}],
+  residenciales:[
+   {id:'r1',nombre:'Residencial Los Almendros',municipio:'Santa Tecla, La Libertad',plan:'pro',estado:'activa',creada:addDays(hoy,-210),contacto:{nombre:'Lucía Martínez',tel:'7000-2222',email:'admin@losalmendros.example'}},
+   {id:'r2',nombre:'Residencial Vista Verde',municipio:'Antiguo Cuscatlán, La Libertad',plan:'basico',estado:'prueba',vencePrueba:addDays(hoy,20),creada:addDays(hoy,-10),contacto:{nombre:'Jorge Bonilla',tel:'7222-3344',email:'jbonilla@correo.example'},init:{adminNombre:'Jorge Bonilla',adminUser:'admin',adminPass:'1234',casas:24,poligonos:'A,B,C',cuota:25,diaVence:5,direccion:'Final calle El Pedregal'}},
+   {id:'r3',nombre:'Condominio Las Palmeras',municipio:'San Miguel, San Miguel',plan:'basico',estado:'suspendida',creada:addDays(hoy,-120),contacto:{nombre:'Irma Chávez',tel:'7666-1122',email:'ichavez@correo.example'},init:{adminNombre:'Irma Chávez',adminUser:'admin',adminPass:'1234',casas:8,poligonos:'Único',cuota:40,diaVence:10}}],
+  solicitudes:[{id:uid(),nombre:'Residencial Brisas del Lago',municipio:'Ilopango, San Salvador',casas:60,contacto:{nombre:'Marta Aguilar',tel:'7123-4567',email:'marta@correo.example'},mensaje:'Nos interesa el control de acceso y cobros.',fecha:addDays(hoy,-1)+'T16:20',estado:'pendiente'}]}}
+function seedVacia(r){const i=r.init||{},ct=r.contacto||{};const per=periodoActual();const pols=String(i.poligonos||'A').split(',').map(x=>x.trim()).filter(Boolean);const n=Math.max(1,+i.casas||10);const por=Math.ceil(n/pols.length);
+  const d={version:1,inicioCobro:ymd()<=per+'-'+pad(Math.min(28,+i.diaVence||10))?per:addMonths(per,1),residencial:{nombre:r.nombre,direccion:i.direccion||'',municipio:r.municipio||'',telefono:ct.tel||'',email:ct.email||'',registro:'',presidente:{},admin:{},banco:{banco:'',tipo:'',numero:'',titular:r.nombre},vigilancia:{telefono:''},
+    equipo:[{id:'e1',cargo:'Administrador(a)',nombre:i.adminNombre||ct.nombre||'Administración',telefono:ct.tel||'',email:ct.email||''}],portones:[{id:'p1',nombre:'Portón principal',tipo:'Vehicular y peatonal',horario:'24 horas'}],portonTipo:{personal:'p1',entrega:'p1',correo:'p1',visita:'p1'}},
+    config:{cuota:+i.cuota||25,diaVence:Math.min(28,+i.diaVence||10),recargo:0,linkPago:'',diasAviso:5},casas:[],
+    usuarios:[{id:'u_admin',rol:'admin',nombre:i.adminNombre||ct.nombre||'Administración',user:String(i.adminUser||'admin').toLowerCase(),pass:i.adminPass||'1234',tel:ct.tel||'',activo:true}],
+    cuotas:[],pagos:[],pases:[],avisos:[{id:uid(),categoria:'general',prioridad:'normal',titulo:'Bienvenidos a Mi Residencial',cuerpo:'La administración usará esta app para avisos, control de acceso y pagos.',cuando:'',fecha:nowISO()}],
+    reclamos:[],notifs:[],solicitudes:[],autorizaciones:[],recordados:{},visitasCobro:[],cierres:[],reciboSeq:0};
+  for(let k=0;k<n;k++){const p=pols[Math.min(pols.length-1,Math.floor(k/por))];d.casas.push({id:'c'+(k+1),numero:String(k%por+1),pasaje:/^pol/i.test(p)?p:'Polígono '+p,familia:'',duenoId:null,codigo:genCodigo()})}
+  return d}
+function loadPlat(){try{PLAT=JSON.parse(localStorage.getItem(PKEY))}catch(e){PLAT=null}if(!PLAT||!PLAT.version){PLAT=seedPlat();PLAT.demo=true;savePlat()}}
+function savePlat(){try{localStorage.setItem(PKEY,JSON.stringify(PLAT))}catch(e){}}
+function leerDB(id){if(id===RES)return DB;try{return JSON.parse(localStorage.getItem(dbKey(id)))}catch(e){return null}}
+function resStats(r){const d=leerDB(r.id);if(!d)return{casas:(r.init&&+r.init.casas)||0,usuarios:1,mora:0,conDueno:0};const h=ymd();
+  const mora=new Set(d.cuotas.filter(q=>q.estado==='pendiente'&&h>q.periodo+'-'+pad(d.config.diaVence)).map(q=>q.casaId)).size;
+  return{casas:d.casas.length,usuarios:d.usuarios.filter(u=>u.activo).length,mora,conDueno:d.casas.filter(c=>c.duenoId).length}}
+const feeRes=r=>Math.max(25,resStats(r).casas*PLANES[r.plan||'basico'].pc);
+function cambiarRes(id){if(id==='plat'){S.modoPlat=true;render();return}S.modoPlat=false;load(id);render()}
+function impBanner(){return `<div class="alert warn" style="border-radius:0;margin:0;display:flex;align-items:center;gap:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))"><span class="grow sm"><b>Modo plataforma</b> Estás viendo ${esc(DB.residencial.nombre)} como ${esc(ROL[S.user.rol].toLowerCase())}: ${esc(S.user.nombre)}.</span><button class="btn smb" onclick="salir()">Volver</button></div>`}
+function impersonar(id,uidx){const sa=S.imp||S.user;load(id);const ad=uidx?usuario(uidx):DB.usuarios.find(u=>u.rol==='admin'&&u.activo);if(!ad)return toast('No hay un usuario activo para entrar');S.imp=sa;S.user=ad;S.tab='inicio';S.sub=null;render();window.scrollTo(0,0)}
+function vSAInicio(){const rs=PLAT.residenciales;const act=rs.filter(r=>r.estado!=='suspendida');const sol=PLAT.solicitudes.filter(s=>s.estado==='pendiente').length;
+  const casas=sum(act,r=>resStats(r).casas);const ing=sum(rs.filter(r=>r.estado==='activa'),feeRes);
+  return `<h2>Hola, ${esc(S.user.nombre)}</h2><p class="note" style="margin-top:-6px">Panel del dueño de la app. Desde aquí registras y administras cada residencial cliente.</p>
+  ${sol?alertBox('info',`${sol} residencial(es) quieren la app`,'Revisa las solicitudes y crea su cuenta.',"go('solicitudesRes')"):''}
+  <div class="kpis">${kpi('Residenciales activas',rs.filter(r=>r.estado==='activa').length,"S.rsf='activa';go('residenciales')")}${kpi('En prueba',rs.filter(r=>r.estado==='prueba').length,"S.rsf='prueba';go('residenciales')")}${kpi('Casas en la plataforma',casas,"go('residenciales')")}${kpi('Ingreso mensual (activas)',money(ing),"go('residenciales')")}</div>
+  <h3>Residenciales</h3>${rs.map(resItem).join('')}<button class="btn block" onclick="go('nuevaRes')">${ic('plus',18)} Registrar residencial</button>`}
+function resItem(r){const st=resStats(r),e=EST_RES[r.estado];return `<button class="item" onclick="go('resDet','${r.id}')"><div class="av">${ic('houses',20)}</div><div class="grow"><b>${esc(r.nombre)}</b><div class="sm muted">${esc(r.municipio)}</div><div class="sm">${st.casas} casas · Plan ${PLANES[r.plan].l} · ${money(feeRes(r))}/mes</div></div>${chip(e.l,e.c)}</button>`}
+function vSAResidenciales(){S.rsf=S.rsf||'todas';const l=PLAT.residenciales.filter(r=>S.rsf==='todas'||r.estado===S.rsf);
+  return `<div class="row" style="margin-bottom:6px"><h2 class="grow" style="margin:0">Residenciales</h2><button class="btn smb" onclick="go('nuevaRes')">${ic('plus',16)} Registrar</button></div>${seg('rsf',[['todas','Todas'],['activa','Activas'],['prueba','En prueba'],['suspendida','Suspendidas']])}${l.map(resItem).join('')||empty('Sin residenciales')}`}
+function vSAResDet(){const r=PLAT.residenciales.find(x=>x.id===S.sub);if(!r)return empty('No encontrada');const st=resStats(r),e=EST_RES[r.estado];const d=leerDB(r.id);const ad=d&&d.usuarios.find(u=>u.rol==='admin'&&u.activo);
+  return `<div class="row"><div class="av" style="width:52px;height:52px">${ic('houses',24)}</div><div class="grow"><h2 style="margin:0">${esc(r.nombre)}</h2><div class="muted sm">${esc(r.municipio)}</div></div>${chip(e.l,e.c)}</div>
+  <div class="kpis" style="margin-top:12px">${kpi('Casas',st.casas,'')}${kpi('Con propietario',st.conDueno,'')}${kpi('Usuarios activos',st.usuarios,'')}${kpi('Casas en mora',st.mora,'')}</div>
+  <h3>Suscripción</h3><div class="card kv"><span>Plan</span><b>${PLANES[r.plan].l} · ${money(PLANES[r.plan].pc)} por casa</b><span>Mensualidad</span><b>${money(feeRes(r))}</b><span>Cliente desde</span><b>${fFecha(r.creada)}</b>${r.estado==='prueba'?`<span>Prueba vence</span><b>${fFecha(r.vencePrueba)}</b>`:''}</div>
+  <h3>Contacto</h3><div class="card kv"><span>Nombre</span><b>${esc(r.contacto.nombre)}</b><span>Teléfono</span><b>${esc(r.contacto.tel)}</b><span>Correo</span><b>${esc(r.contacto.email)}</b><span>Usuario admin</span><b>${esc(ad?ad.user:(r.init&&r.init.adminUser)||'admin')}</b></div>
+  ${d?usuariosNivel(r,d):''}<h3>Acciones</h3><button class="btn block" onclick="impersonar('${r.id}')">Entrar como administración</button><button class="btn ghost block" onclick="editarRes('${r.id}')">Modificar todo el registro</button>
+  <label class="f" style="margin-top:12px">Plan<select onchange="setRes('${r.id}','plan',this.value)">${Object.entries(PLANES).map(([k,p])=>`<option value="${k}" ${r.plan===k?'selected':''}>${p.l} · ${money(p.pc)}/casa</option>`).join('')}</select></label>
+  <label class="f">Estado<select onchange="setRes('${r.id}','estado',this.value)">${Object.entries(EST_RES).map(([k,x])=>`<option value="${k}" ${r.estado===k?'selected':''}>${x.l}</option>`).join('')}</select></label>
+  <p class="note">Una residencial suspendida no puede iniciar sesión (admin, residentes, vigilancia ni cobrador).</p><h3>Zona de riesgo</h3><button class="btn bad block" onclick="eliminarRes('${r.id}')">Eliminar residencial</button>`}
+function escribirDB(id,d){if(id===RES){DB=d;save()}else try{localStorage.setItem(dbKey(id),JSON.stringify(d))}catch(x){}}
+function editarRes(id){const r=PLAT.residenciales.find(x=>x.id===id);let d=leerDB(id);if(!d){d=seedVacia(r);escribirDB(id,d)}const c=r.contacto||{};const ad=d.usuarios.find(u=>u.rol==='admin')||{};const pols=[...new Set(d.casas.map(x=>x.pasaje))];
+  const v=(k,l,val,t='text',x='')=>`<label class="f">${l}<input name="${k}" type="${t}" value="${esc(val??'')}" ${x}></label>`;
+  sheet('Editar residencial',`<form onsubmit="guardarRes(event,'${id}')">
+  <h3 style="margin-top:0">Residencial</h3>${v('nombre','Nombre',r.nombre,'text','required')}${v('municipio','Municipio / departamento',r.municipio,'text','required')}${v('direccion','Dirección',d.residencial.direccion)}
+  <h3>Casas y cuota</h3><div class="two">${v('casas','Cantidad de casas',d.casas.length,'number','min="1" max="2000" required')}<label class="f">Polígono para casas nuevas<input name="polNuevo" list="polList" value="${esc(pols[pols.length-1]||'Polígono A')}"><datalist id="polList">${pols.map(p=>`<option value="${esc(p)}">`).join('')}</datalist></label></div>
+  <p class="note" style="margin-top:-4px">Polígonos actuales: ${esc(pols.join(', ')||'ninguno')}. Si bajas la cantidad, solo se quitan casas sin propietario ni pagos.</p>
+  <div class="two">${v('cuota','Cuota mensual ($)',d.config.cuota,'number','step="0.01" min="0"')}${v('diaVence','Día de vencimiento',d.config.diaVence,'number','min="1" max="28"')}</div>
+  <h3>Administrador(a)</h3>${v('adminNombre','Nombre',ad.nombre)}<div class="two">${v('ct','Teléfono',c.tel,'tel')}${v('ce','Correo',c.email,'email')}</div><div class="two">${v('adminUser','Usuario',ad.user,'text','required autocapitalize="none"')}${v('adminPass','Nueva contraseña',"",'text','minlength="4" placeholder="Dejar vacío = no cambia"')}</div>
+  <h3>Suscripción</h3><label class="f">Plan<select name="plan">${Object.entries(PLANES).map(([k,x])=>`<option value="${k}" ${r.plan===k?'selected':''}>${x.l} · ${money(x.pc)} por casa</option>`).join('')}</select></label><div class="two"><label class="f">Estado<select name="estado">${Object.entries(EST_RES).map(([k,x])=>`<option value="${k}" ${r.estado===k?'selected':''}>${x.l}</option>`).join('')}</select></label>${v('vp','Prueba vence',r.vencePrueba||addDays(ymd(),30),'date')}</div>
+  <button class="btn block">Guardar cambios</button><button type="button" class="btn bad block" onclick="eliminarRes('${id}')">Eliminar residencial</button></form>`)}
+function guardarRes(e,id){e.preventDefault();const f=new FormData(e.target);const g=k=>String(f.get(k)||'').trim();const r=PLAT.residenciales.find(x=>x.id===id);const d=leerDB(id);
+  const ad=d.usuarios.find(u=>u.rol==='admin');const un=g('adminUser').toLowerCase();if(d.usuarios.some(u=>u!==ad&&u.user.toLowerCase()===un))return toast('Ese usuario ya lo usa otra persona de la residencial');
+  // casas
+  const n=Math.max(1,+g('casas')),cur=d.casas.length;let msgC='';
+  if(n>cur){const pol=normPol(g('polNuevo'))||'Polígono A';let max=Math.max(0,...d.casas.filter(c=>c.pasaje.toLowerCase()===pol.toLowerCase()).map(c=>parseInt(c.numero)||0));const per=periodoActual();const desde=ymd()<=per+'-'+pad(d.config.diaVence)?per:addMonths(per,1);
+    for(let k=0;k<n-cur;k++)d.casas.push({id:'c'+uid(),numero:String(++max),pasaje:pol,familia:'',duenoId:null,codigo:genCodigo(),desde});msgC=` · ${n-cur} casa(s) nuevas en ${pol}`}
+  if(n<cur){const libres=d.casas.filter(c=>!c.duenoId&&!d.pagos.some(p=>p.casaId===c.id)).reverse();if(libres.length<cur-n)return toast(`Solo se pueden quitar ${libres.length} casa(s): las demás tienen propietario o pagos`);
+    const fuera=new Set(libres.slice(0,cur-n).map(c=>c.id));d.casas=d.casas.filter(c=>!fuera.has(c.id));d.cuotas=d.cuotas.filter(q=>!fuera.has(q.casaId));msgC=` · ${cur-n} casa(s) quitadas`}
+  // cuota
+  d.config.cuota=+g('cuota');d.config.diaVence=Math.min(28,Math.max(1,+g('diaVence')||10));const per=periodoActual();d.cuotas.forEach(q=>{if(q.periodo>per&&q.estado==='pendiente')q.monto=d.config.cuota});
+  // admin
+  if(ad){ad.nombre=g('adminNombre')||ad.nombre;ad.user=un;ad.tel=g('ct');if(g('adminPass'))ad.pass=g('adminPass')}
+  const eq=(d.residencial.equipo||[]).find(m=>m.cargo==='Administrador(a)');if(eq){eq.nombre=g('adminNombre')||eq.nombre;eq.telefono=g('ct');eq.email=g('ce')}
+  d.residencial.nombre=g('nombre');d.residencial.municipio=g('municipio');d.residencial.direccion=g('direccion');
+  r.nombre=g('nombre');r.municipio=g('municipio');r.contacto={nombre:g('adminNombre'),tel:g('ct'),email:g('ce')};r.plan=g('plan');r.estado=g('estado');r.vencePrueba=r.estado==='prueba'?g('vp'):(r.vencePrueba||'');
+  if(r.init){r.init.adminUser=un;if(g('adminPass'))r.init.adminPass=g('adminPass')}
+  escribirDB(id,d);if(id===RES)ensureCuotas(),save();savePlat();closeSheet();render();toast('Residencial actualizada'+msgC)}
+function eliminarRes(id){const r=PLAT.residenciales.find(x=>x.id===id);if(PLAT.residenciales.length<2)return toast('Debe quedar al menos una residencial en la plataforma');const st=resStats(r);
+  sheet('Eliminar residencial',`<div class="alert bad"><b>Esta acción no se puede deshacer</b><p>Se borran ${st.casas} casas, ${st.usuarios} usuarios, pagos, accesos, avisos y reclamos de <b>${esc(r.nombre)}</b>. Nadie de esa residencial podrá volver a entrar.</p></div><p class="note">Si solo quieres bloquear el acceso por falta de pago, mejor cambia el estado a <b>Suspendida</b>.</p><label class="f">Escribe el nombre de la residencial para confirmar<input id="delConf" autocomplete="off" placeholder="${esc(r.nombre)}" oninput="document.getElementById('delBtn').disabled=this.value.trim().toLowerCase()!=='${esc(r.nombre.toLowerCase()).replace(/'/g,"\\'")}'"></label><button id="delBtn" class="btn bad block" disabled onclick="eliminarResOk('${id}')">Eliminar definitivamente</button><button class="btn ghost block" onclick="closeSheet()">Cancelar</button>`)}
+function eliminarResOk(id){const r=PLAT.residenciales.find(x=>x.id===id);PLAT.residenciales=PLAT.residenciales.filter(x=>x.id!==id);try{localStorage.removeItem(dbKey(id))}catch(e){}
+  if(RES===id){RES=null;load(PLAT.residenciales[0].id)}if(PLAT.ultima===id)PLAT.ultima=RES;savePlat();closeSheet();go('residenciales');toast(r.nombre+' eliminada')}
+
+function setRes(id,k,v){const r=PLAT.residenciales.find(x=>x.id===id);r[k]=v;if(k==='estado'&&v==='prueba'&&!r.vencePrueba)r.vencePrueba=addDays(ymd(),30);savePlat();render();toast('Guardado')}
+function vSANuevaRes(){const p=S.pref||{};const c=p.contacto||{};return `<h2>Registrar residencial</h2><p class="note" style="margin-top:-6px">Se crea su espacio propio con casas, cuotas y el usuario de administración. Ninguna residencial ve los datos de otra.</p><form onsubmit="crearResidencial(event)">
+  <h3>Residencial</h3><div class="card"><label class="f">Nombre<input name="nombre" required value="${esc(p.nombre||'')}"></label><label class="f">Municipio / departamento<input name="municipio" required value="${esc(p.municipio||'')}"></label><label class="f">Dirección<input name="direccion"></label></div>
+  <h3>Casas y cuota</h3><div class="card"><div class="two"><label class="f">Cantidad de casas<input name="casas" type="number" min="1" max="2000" required value="${esc(p.casas||20)}"></label><label class="f">Polígonos (separados por coma)<input name="poligonos" value="A,B"></label></div><div class="two"><label class="f">Cuota mensual ($)<input name="cuota" type="number" step="0.01" min="0" value="25"></label><label class="f">Día de vencimiento<input name="diaVence" type="number" min="1" max="28" value="10"></label></div></div>
+  <h3>Administrador(a)</h3><div class="card"><label class="f">Nombre<input name="adminNombre" required value="${esc(c.nombre||'')}"></label><div class="two"><label class="f">Teléfono<input name="tel" value="${esc(c.tel||'')}"></label><label class="f">Correo<input name="email" type="email" value="${esc(c.email||'')}"></label></div><div class="two"><label class="f">Usuario<input name="adminUser" required value="admin" autocapitalize="none"></label><label class="f">Contraseña inicial<input name="adminPass" required minlength="4" value="${Math.random().toString(36).slice(2,8)}"></label></div></div>
+  <h3>Suscripción</h3><div class="card"><label class="f">Plan<select name="plan">${Object.entries(PLANES).map(([k,x])=>`<option value="${k}">${x.l} · ${money(x.pc)} por casa · ${x.inc}</option>`).join('')}</select></label><label class="f">Inicio<select name="estado"><option value="prueba">Prueba gratis 30 días</option><option value="activa">Activa (pagando)</option></select></label></div>
+  <button class="btn block">Crear residencial</button></form>`}
+function crearResidencial(e){e.preventDefault();const f=new FormData(e.target);const g=k=>String(f.get(k)||'').trim();
+  const r={id:'r'+uid(),nombre:g('nombre'),municipio:g('municipio'),plan:g('plan'),estado:g('estado'),creada:ymd(),vencePrueba:g('estado')==='prueba'?addDays(ymd(),30):'',contacto:{nombre:g('adminNombre'),tel:g('tel'),email:g('email')},
+    init:{adminNombre:g('adminNombre'),adminUser:g('adminUser').toLowerCase(),adminPass:g('adminPass'),casas:+g('casas'),poligonos:g('poligonos')||'A',cuota:+g('cuota'),diaVence:+g('diaVence'),direccion:g('direccion')}};
+  PLAT.residenciales.push(r);if(S.pref&&S.pref.id){const s=PLAT.solicitudes.find(x=>x.id===S.pref.id);if(s)s.estado='convertida'}S.pref=null;savePlat();
+  const d=seedVacia(r);d.cuotas=[];try{localStorage.setItem(dbKey(r.id),JSON.stringify(d))}catch(x){}
+  go('resDet',r.id);sheet('Residencial creada',`<p><b>${esc(r.nombre)}</b> ya tiene su espacio con ${r.init.casas} casas.</p><div class="card kv"><span>Residencial</span><b>${esc(r.nombre)}</b><span>Usuario</span><b>${esc(r.init.adminUser)}</b><span>Contraseña</span><b>${esc(r.init.adminPass)}</b></div><p class="note">Comparte estos datos con la administración. En la pantalla de inicio deben elegir su residencial.</p><button class="btn block" onclick="closeSheet()">Listo</button>`)}
+function vSASolicitudes(){const p=PLAT.solicitudes.filter(s=>s.estado==='pendiente'),h=PLAT.solicitudes.filter(s=>s.estado!=='pendiente');
+  return `<h2>Residenciales interesadas</h2><p class="note" style="margin-top:-6px">Llegan desde “Quiero la app para mi residencial” en la pantalla de inicio.</p>${p.map(s=>`<div class="card"><b>${esc(s.nombre)}</b><div class="sm muted">${esc(s.municipio)} · ${s.casas} casas · ${fFecha(s.fecha)}</div><div class="kv" style="margin-top:8px"><span>Contacto</span><b>${esc(s.contacto.nombre)}</b><span>Teléfono</span><b>${esc(s.contacto.tel)}</b><span>Correo</span><b>${esc(s.contacto.email)}</b></div>${s.mensaje?`<p class="sm">${esc(s.mensaje)}</p>`:''}<div class="btns"><button class="btn" onclick="convertirSol('${s.id}')">Crear residencial</button><button class="btn ghost" onclick="descartarSol('${s.id}')">Descartar</button></div></div>`).join('')||empty('Sin solicitudes nuevas')}
+  ${h.length?`<h3>Historial</h3>${h.map(s=>`<div class="item"><div class="grow"><b>${esc(s.nombre)}</b><div class="sm muted">${fFecha(s.fecha)}</div></div>${chip(s.estado==='convertida'?'Cliente':'Descartada',s.estado==='convertida'?'ok':'mut')}</div>`).join('')}`:''}`}
+function convertirSol(id){S.pref=PLAT.solicitudes.find(s=>s.id===id);go('nuevaRes')}
+function descartarSol(id){PLAT.solicitudes.find(s=>s.id===id).estado='descartada';savePlat();render()}
+function vSAMas(){return `<h2>Más</h2>${menuItem('user','Mi cuenta (usuario y contraseña)','miCuentaSA()')}<h3>Planes</h3>${Object.values(PLANES).map(p=>`<div class="card"><div class="row"><b class="grow">${p.l}</b><b>${money(p.pc)} / casa / mes</b></div><div class="sm muted">${p.inc} · mínimo $25.00</div></div>`).join('')}<h3>Sesión</h3>${menuItem('reset','Borrar todos los registros','borrarRegistros()')}${menuItem('reset','Cargar datos de ejemplo','resetDemo()')}${menuItem('out','Cerrar sesión','salir()')}`}
+function vSolicitarRes(){return `<div class="login"><button class="btn ghost smb" style="align-self:flex-start;margin-bottom:12px" onclick="S.tab='inicio';render()">${ic('back',16)} Volver</button><h2>Quiero la app para mi residencial</h2><p class="note">Déjanos los datos y te contactamos para crear la cuenta de tu residencial con 30 días de prueba.</p><form class="card" onsubmit="enviarSolRes(event)"><label class="f">Nombre de la residencial<input name="nombre" required></label><div class="two"><label class="f">Municipio<input name="municipio" required></label><label class="f">N° de casas<input name="casas" type="number" min="1" required></label></div><label class="f">Tu nombre<input name="cn" required></label><div class="two"><label class="f">Teléfono<input name="ct" required inputmode="tel"></label><label class="f">Correo<input name="ce" type="email" required></label></div><label class="f">Comentario<textarea name="m"></textarea></label><button class="btn block">Enviar</button></form></div>`}
+function enviarSolRes(e){e.preventDefault();const f=new FormData(e.target);PLAT.solicitudes.unshift({id:uid(),nombre:f.get('nombre'),municipio:f.get('municipio'),casas:+f.get('casas'),contacto:{nombre:f.get('cn'),tel:f.get('ct'),email:f.get('ce')},mensaje:f.get('m'),fecha:nowISO(),estado:'pendiente'});savePlat();S.tab='inicio';render();sheet('Solicitud enviada','<p>Gracias. Te contactaremos para crear la cuenta de tu residencial.</p><button class="btn block" onclick="closeSheet()">Listo</button>')}
+
+/* =========================================================
+   COBRADOR A DOMICILIO
+   ========================================================= */
+const FRANJAS={manana:'Mañana (8–12)',tarde:'Tarde (1–5)',noche:'Noche (5–7)'};
+const RECIBO={digital:'Digital (en la app)',fisico:'Físico (talonario)',ambos:'Físico y digital'};
+const cobradores=()=>DB.usuarios.filter(u=>u.rol==='cobrador'&&u.activo);
+const montoVisita=v=>sum(pendCasa(v.casaId).filter(c=>v.periodos.includes(c.periodo)),montoCuota);
+function pedirCobro(cid){const pend=pendCasa(cid);if(!pend.length)return toast('No hay cuotas pendientes');if(DB.visitasCobro.some(v=>v.casaId===cid&&v.estado==='pendiente'))return toast('Ya hay un cobro a domicilio programado para esta casa');
+  const pre=S.user.rol==='residente'&&S.sel&&S.sel.length?S.sel:pend.map(c=>c.periodo);const adm=S.user.rol==='admin';
+  sheet('Cobro a domicilio · '+casaNom(cid),`<p class="note">El cobrador llega a la casa, recibe el pago y entrega el recibo físico o digital.</p><div class="card">${pend.map(c=>`<label class="chk"><input type="checkbox" name="per" value="${c.periodo}" ${pre.includes(c.periodo)?'checked':''}><span class="grow">${perL(c.periodo)} ${vencida(c)?chip('Vencido','bad'):''}</span><b>${money(montoCuota(c))}</b></label>`).join('')}</div>
+  <form onsubmit="crearVisita(event,'${cid}')"><div class="two"><label class="f">Fecha<input name="fecha" type="date" value="${ymd()}" min="${ymd()}" required></label><label class="f">Horario<select name="franja">${Object.entries(FRANJAS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label></div><label class="f">Recibo<select name="recibo">${Object.entries(RECIBO).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></label>${adm&&cobradores().length?`<label class="f">Cobrador<select name="cob"><option value="">Cualquier cobrador</option>${cobradores().map(u=>`<option value="${u.id}">${esc(u.nombre)}</option>`).join('')}</select></label>`:''}<label class="f">Indicaciones (opcional)<input name="nota" placeholder="Ej. Tocar el timbre, preguntar por Ana"></label><button class="btn block">${adm?'Programar cobro':'Solicitar cobrador'}</button></form>`)}
+function crearVisita(e,cid){e.preventDefault();const ps=perSel();if(!ps.length)return toast('Selecciona al menos un mes');const f=new FormData(e.target);
+  const v={id:uid(),casaId:cid,periodos:ps,fecha:f.get('fecha'),franja:f.get('franja'),recibo:f.get('recibo'),nota:f.get('nota')||'',cobradorId:f.get('cob')||'',estado:'pendiente',solicitadoPor:S.user.id,creada:nowISO()};DB.visitasCobro.unshift(v);
+  const txt=`${casaNom(cid)} · ${fFecha(v.fecha)} · ${FRANJAS[v.franja]} · ${ps.map(perC).join(', ')}`;
+  notificar(v.cobradorId?[v.cobradorId]:cobradores().map(u=>u.id),'🧾 Nuevo cobro a domicilio',txt,{tab:'inicio'});
+  if(S.user.rol==='admin')notificar(duenoIds(cid),'🧾 Cobro a domicilio programado',`El cobrador pasará el ${fFecha(v.fecha)} (${FRANJAS[v.franja]}).`,{tab:'pagos'});else notificar(admins(),'🧾 Solicitud de cobro a domicilio',txt,{tab:'cobros'});
+  save();closeSheet();render();toast(S.user.rol==='admin'?'Cobro programado':'Listo, el cobrador pasará a tu casa')}
+function cancelarVisita(id){const v=DB.visitasCobro.find(x=>x.id===id);v.estado='cancelada';notificar(v.cobradorId?[v.cobradorId]:cobradores().map(u=>u.id),'Cobro cancelado',casaNom(v.casaId)+' canceló el cobro a domicilio.');save();render();toast('Cobro a domicilio cancelado')}
+function visitaRes(cid){return DB.visitasCobro.filter(v=>v.casaId===cid&&v.estado==='pendiente').map(v=>`<div class="card" style="border:2px solid var(--info)"><b>🧾 Cobro a domicilio programado</b><div class="sm">${fFecha(v.fecha)} · ${FRANJAS[v.franja]} · ${v.periodos.map(perC).join(', ')} · ${money(montoVisita(v))}</div><div class="sm muted">Cobrador: ${v.cobradorId?esc(usuario(v.cobradorId).nombre):'por asignar'} · Recibo ${RECIBO[v.recibo].toLowerCase()}</div><div class="btns"><button class="btn ghost smb" onclick="cancelarVisita('${v.id}')">Cancelar cobro a domicilio</button></div></div>`).join('')}
+const ORD_F={manana:0,tarde:1,noche:2};
+function vCobRuta(){const me=S.user.id,h=ymd();S.rf=S.rf||'hoy';let l=DB.visitasCobro.filter(v=>v.estado==='pendiente'&&(!v.cobradorId||v.cobradorId===me));const all=l.length;if(S.rf==='hoy')l=l.filter(v=>v.fecha<=h);
+  l.sort((a,b)=>a.fecha.localeCompare(b.fecha)||ORD_F[a.franja]-ORD_F[b.franja]);const caja=cajaDe(me);const atr=caja.some(p=>p.fecha.slice(0,10)<h);
+  return `<h2>Ruta de cobro</h2>${atr?alertBox('bad','Tienes cobros sin cierre de días anteriores','Envía tu cierre y entrega el efectivo a la administración.',"go('caja')"):''}<div class="kpis">${kpi('Visitas para hoy',DB.visitasCobro.filter(v=>v.estado==='pendiente'&&(!v.cobradorId||v.cobradorId===me)&&v.fecha<=h).length,"S.rf='hoy';render()")}${kpi('En mi caja',money(sum(caja,p=>p.monto)),"go('caja')")}</div>${seg('rf',[['hoy','Hoy y atrasadas'],['todas',`Todas (${all})`]])}${l.map(visitaCard).join('')||empty('Sin visitas pendientes')}<button class="btn ghost block" onclick="cobrarOtra()">Cobrar a una casa sin solicitud</button>`}
+function visitaCard(v){const c=casa(v.casaId),d=usuario(c.duenoId),h=ymd();const tel=d&&d.tel||'';return `<div class="card"><div class="row"><div class="av">${esc(c.numero)}</div><div class="grow"><b>${casaNom(c.id)}</b> <span class="sm muted">· ${esc(c.pasaje)}</span><div class="sm muted">${c.familia?'Fam. '+esc(c.familia)+' · ':''}${esc(d?d.nombre:'')}</div>${tel?`<a class="sm" href="tel:${esc(tel)}">${ic('phone',13)} ${esc(tel)}</a>`:''}</div><div class="right"><b style="font-size:18px">${money(montoVisita(v))}</b></div></div>
+  <div class="months">${chip(v.fecha<h?'Atrasada · '+fFecha(v.fecha):v.fecha===h?'Hoy':fFecha(v.fecha),v.fecha<h?'bad':v.fecha===h?'warn':'info')}${chip(FRANJAS[v.franja])}${chip('Recibo '+RECIBO[v.recibo].split(' ')[0].toLowerCase())}</div><div class="months">${v.periodos.map(p=>chip(perL(p),'bad')).join('')}</div>${v.nota?`<div class="sm" style="margin-top:6px">📝 ${esc(v.nota)}</div>`:''}
+  <div class="btns"><button class="btn ok" onclick="cobrarCasa('${c.id}','${v.id}')">Registrar cobro</button><button class="btn ghost" onclick="falloVisita('${v.id}')">No se pudo cobrar</button></div></div>`}
+function falloVisita(id){sheet('No se pudo cobrar',`<form onsubmit="falloOk(event,'${id}')"><label class="f">Motivo<select name="m"><option>No había nadie en casa</option><option>Pidió otra fecha</option><option>No tenía el dinero completo</option><option>Otro</option></select></label><label class="f">Reprogramar para (opcional)<input name="f" type="date" min="${ymd()}"></label><button class="btn block">Guardar</button></form>`)}
+function falloOk(e,id){e.preventDefault();const f=new FormData(e.target);const v=DB.visitasCobro.find(x=>x.id===id);v.intentos=v.intentos||[];v.intentos.push({fecha:nowISO(),motivo:f.get('m'),por:S.user.id});
+  if(f.get('f')){v.fecha=f.get('f');notificar(duenoIds(v.casaId),'🧾 Cobro reprogramado',`${f.get('m')}. El cobrador volverá el ${fFecha(v.fecha)}.`,{tab:'pagos'})}else{v.estado='fallida';notificar(duenoIds(v.casaId),'🧾 No se pudo realizar el cobro',f.get('m')+'. Puedes solicitarlo de nuevo desde Pagos.',{tab:'pagos'})}
+  notificar(admins(),'Cobro no realizado · '+casaNom(v.casaId),f.get('m'),{tab:'cobros'});save();closeSheet();render();toast('Guardado')}
+function cobrarOtra(){sheet('Cobrar a una casa',`<label class="f">Casa<select id="cobCasa">${DB.casas.filter(c=>pendCasa(c.id).length).map(c=>`<option value="${c.id}">${casaNom(c.id)} · ${esc(c.pasaje)} · ${esc(duenoNom(c.id))}</option>`).join('')}</select></label><button class="btn block" onclick="cobrarCasa(document.getElementById('cobCasa').value)">Continuar</button>`)}
+function cobrarCasa(cid,vid){const v=vid&&DB.visitasCobro.find(x=>x.id===vid);const pend=pendCasa(cid);if(!pend.length)return toast('Esta casa ya no tiene cuotas pendientes');const pre=v?v.periodos:pend.filter(vencida).map(c=>c.periodo);
+  sheet('Registrar cobro · '+casaNom(cid),`<div class="sm muted" style="margin-bottom:8px">${esc(duenoNom(cid))} · ${esc(casaDesc(casa(cid)))}</div><div class="card">${pend.map(c=>`<label class="chk"><input type="checkbox" name="per" value="${c.periodo}" ${pre.includes(c.periodo)?'checked':''} onchange="totCobro('${cid}')"><span class="grow">${perL(c.periodo)} ${vencida(c)?chip('Vencido','bad'):''}</span><b>${money(montoCuota(c))}</b></label>`).join('')}</div><div class="card row"><span class="grow">Total a recibir</span><b id="totc" style="font-size:22px"></b></div>
+  <form onsubmit="guardarCobro(event,'${cid}','${vid||''}')"><div class="two"><label class="f">Forma de pago<select name="forma"><option value="efectivo">Efectivo</option><option value="cheque">Cheque</option></select></label><label class="f">Recibo<select name="recibo">${Object.entries(RECIBO).map(([k,l])=>`<option value="${k}" ${v&&v.recibo===k?'selected':''}>${l}</option>`).join('')}</select></label></div><label class="f">N° de recibo del talonario (si entregas físico)<input name="talonario" inputmode="numeric"></label><button class="btn ok block big-ok">${ic('check',20)} Confirmar cobro</button></form>`);totCobro(cid)}
+function totCobro(cid){const ps=perSel();const t=document.getElementById('totc');if(t)t.textContent=money(sum(pendCasa(cid).filter(c=>ps.includes(c.periodo)),montoCuota))}
+function guardarCobro(e,cid,vid){e.preventDefault();const ps=perSel();if(!ps.length)return toast('Selecciona al menos un mes');const f=new FormData(e.target);const cs=pendCasa(cid).filter(c=>ps.includes(c.periodo));
+  if(f.get('recibo')!=='digital'&&!String(f.get('talonario')).trim())return toast('Escribe el número del recibo físico');
+  DB.reciboSeq=(DB.reciboSeq||0)+1;const num='C-'+String(DB.reciboSeq).padStart(5,'0');
+  const p={id:uid(),casaId:cid,periodos:ps,monto:sum(cs,montoCuota),metodo:'cobrador',forma:f.get('forma'),ref:num,talonario:String(f.get('talonario')).trim(),recibo:f.get('recibo'),fecha:nowISO(),fechaAprob:nowISO(),estado:'aprobado',usuarioId:S.user.id,aprobadoPor:S.user.id,cobradorId:S.user.id,cierreId:null,comprobante:null};
+  DB.pagos.unshift(p);cs.forEach(c=>c.estado='pagado');if(vid){const v=DB.visitasCobro.find(x=>x.id===vid);if(v){v.estado='cobrada';v.pagoId=p.id}}
+  DB.visitasCobro.filter(v=>v.casaId===cid&&v.estado==='pendiente'&&v.periodos.every(x=>ps.includes(x))).forEach(v=>{v.estado='cobrada';v.pagoId=p.id});
+  notificar(duenoIds(cid),p.recibo==='fisico'?'✅ Pago recibido por el cobrador':'🧾 Recibo digital '+num,`Pagaste ${ps.map(perL).join(', ')} por ${money(p.monto)} a ${S.user.nombre}.${p.talonario?' Recibo físico N° '+p.talonario+'.':''}`,{tab:'pagos'});
+  notificar(admins(),'🧾 Cobro en calle · '+casaNom(cid),`${money(p.monto)} · ${num} · ${S.user.nombre}`,{tab:'cobros'});save();render();reciboCobro(p.id)}
+function reciboCobro(id){const p=pago(id),c=casa(p.casaId),cb=usuario(p.cobradorId),d=usuario(c.duenoId);
+  const img=genImg({titulo:'Recibo de pago',sub:DB.residencial.nombre,filas:[['Recibo N°',p.ref+(p.talonario?' · talonario '+p.talonario:'')],['Casa',casaNom(c.id)+' · '+c.pasaje],['Propietario',duenoNom(c.id)],['Concepto','Cuota de mantenimiento: '+p.periodos.map(perL).join(', ')],['Monto',money(p.monto)+' · '+(p.forma==='cheque'?'Cheque':'Efectivo')],['Cobrador',cb?cb.nombre:''],['Fecha',fFecha(p.fecha)]],sello:'CANCELADO'});
+  const tel=(d&&d.tel||'').replace(/\D/g,'');const txt=encodeURIComponent(`${DB.residencial.nombre}\nRecibo ${p.ref} · ${casaNom(c.id)}\n${p.periodos.map(perL).join(', ')}\nTotal: ${money(p.monto)}\nCobrador: ${cb?cb.nombre:''}`);
+  sheet('Cobro registrado',`<img class="thumb" src="${img}" alt="Recibo">${p.recibo!=='fisico'?`<p class="note">El recibo digital ya está en la app del residente.</p><a class="btn sec block" target="_blank" rel="noopener" href="https://wa.me/${tel?'503'+tel:''}?text=${txt}">Enviar también por WhatsApp</a>`:''}${p.recibo!=='digital'?`<p class="note">Entrega el recibo físico N° ${esc(p.talonario)}.</p>`:''}<button class="btn block" onclick="closeSheet()">Listo</button>`)}
+const cajaDe=uid_=>DB.pagos.filter(p=>p.metodo==='cobrador'&&p.cobradorId===uid_&&!p.cierreId&&p.estado==='aprobado').sort((a,b)=>a.fecha.localeCompare(b.fecha));
+function filaCobro(p){return `<div class="chk"><span class="grow"><b>${casaNom(p.casaId)}</b> <span class="sm muted">· ${esc(p.ref)}${p.talonario?' · tal. '+esc(p.talonario):''} · ${fFecha(p.fecha)}</span><div class="sm muted">${p.periodos.map(perC).join(', ')} · ${p.forma==='cheque'?'Cheque':'Efectivo'}</div></span><b>${money(p.monto)}</b></div>`}
+function vCobCaja(){const caja=cajaDe(S.user.id);const ef=sum(caja.filter(p=>p.forma!=='cheque'),p=>p.monto),ch=sum(caja.filter(p=>p.forma==='cheque'),p=>p.monto);
+  return `<h2>Mi caja</h2><p class="note" style="margin-top:-6px">Cobros que aún no has entregado. Al final del día envía el cierre y entrega el dinero a la administración.</p><div class="kpis">${kpi('Efectivo',money(ef),'')}${kpi('Cheques',money(ch),'')}</div><h3>${caja.length} recibo(s) · total ${money(ef+ch)}</h3><div class="card">${caja.map(filaCobro).join('')||empty('No tienes cobros pendientes de cierre')}</div>
+  ${caja.length?`<form class="card" onsubmit="crearCierre(event)"><label class="f">Efectivo que entregas (contado)<input name="declarado" type="number" step="0.01" min="0" value="${ef.toFixed(2)}" required></label><label class="f">Nota (opcional)<input name="nota" placeholder="Ej. Billete de $20 en mal estado"></label><button class="btn block">Enviar cierre del día</button></form>`:''}`}
+function crearCierre(e){e.preventDefault();const f=new FormData(e.target);const caja=cajaDe(S.user.id);if(!caja.length)return;
+  const c={id:uid(),cobradorId:S.user.id,fecha:nowISO(),pagos:caja.map(p=>p.id),total:sum(caja,p=>p.monto),efectivo:sum(caja.filter(p=>p.forma!=='cheque'),p=>p.monto),cheques:sum(caja.filter(p=>p.forma==='cheque'),p=>p.monto),declarado:+f.get('declarado'),nota:f.get('nota')||'',estado:'enviado'};
+  DB.cierres.unshift(c);caja.forEach(p=>p.cierreId=c.id);notificar(admins(),'💵 Cierre de cobrador por cuadrar',`${S.user.nombre} · ${caja.length} recibo(s) · ${money(c.total)}`,{tab:'cobros'});save();render();toast('Cierre enviado a la administración')}
+const EST_C={enviado:{l:'Por cuadrar',c:'warn'},cuadrado:{l:'Cuadrado',c:'ok'},diferencia:{l:'Con diferencia',c:'bad'}};
+function cierreCard(c,adm){const cb=usuario(c.cobradorId);const ps=c.pagos.map(pago).filter(Boolean);const e=EST_C[c.estado];
+  return `<div class="card"><div class="row"><div class="grow"><b>${adm?esc(cb?cb.nombre:''):'Cierre '+fFecha(c.fecha).split(' · ')[0]}</b> ${chip(e.l,e.c)}<div class="sm muted">${fFecha(c.fecha)} · ${ps.length} recibo(s)</div></div><b style="font-size:18px">${money(c.total)}</b></div>
+  <div class="kv" style="margin-top:10px"><span>Según recibos</span><b>${money(c.total)} (efectivo ${money(c.efectivo)}${c.cheques?', cheques '+money(c.cheques):''})</b><span>Cobrador entrega</span><b>${money(c.declarado)}</b>${c.estado!=='enviado'?`<span>Administración recibió</span><b>${money(c.recibido)}</b><span>Diferencia</span><b style="color:var(${Math.abs(c.dif)<0.005?'--ok':'--bad'})">${money(c.dif)}</b>`:''}</div>${c.nota?`<div class="sm" style="margin-top:6px">Cobrador: ${esc(c.nota)}</div>`:''}${c.notaAdmin?`<div class="sm">Administración: ${esc(c.notaAdmin)}</div>`:''}
+  <details style="margin-top:8px"><summary class="sm">Ver recibos</summary>${ps.map(filaCobro).join('')}</details>
+  ${adm&&c.estado==='enviado'?`<div class="two" style="margin-top:10px"><label class="f">Efectivo recibido${c.cheques?' + cheques':''}<input id="rec-${c.id}" type="number" step="0.01" value="${(c.declarado+c.cheques).toFixed(2)}"></label><label class="f">Nota<input id="nota-${c.id}"></label></div><button class="btn ok block" onclick="cuadrarCierre('${c.id}')">Cuadrar cierre</button>`:''}</div>`}
+function cuadrarCierre(id){const c=DB.cierres.find(x=>x.id===id);const rec=+document.getElementById('rec-'+id).value;c.recibido=rec;c.dif=Math.round((rec-c.total)*100)/100;c.estado=Math.abs(c.dif)<0.005?'cuadrado':'diferencia';c.notaAdmin=document.getElementById('nota-'+id).value;c.revisadoPor=S.user.id;c.fechaRev=nowISO();
+  notificar([c.cobradorId],c.estado==='cuadrado'?'✅ Cierre cuadrado':'⚠️ Cierre con diferencia',c.estado==='cuadrado'?`Tu cierre de ${money(c.total)} cuadró.`:`Diferencia de ${money(c.dif)}. ${c.notaAdmin||''}`,{tab:'cierres'});save();render();toast(c.estado==='cuadrado'?'Cierre cuadrado':'Cierre guardado con diferencia de '+money(c.dif))}
+function vCobCierres(){const l=DB.cierres.filter(c=>c.cobradorId===S.user.id);return `<h2>Mis cierres</h2>${l.map(c=>cierreCard(c,false)).join('')||empty('Aún no has enviado cierres')}`}
+function vAdmCobros(){S.cseg=S.cseg||'cierres';const vis=DB.visitasCobro.filter(v=>v.estado==='pendiente');const pc=DB.cierres.filter(c=>c.estado==='enviado');const calle=DB.pagos.filter(p=>p.metodo==='cobrador'&&!p.cierreId&&p.estado==='aprobado');
+  let h=`<h2>Cobro a domicilio</h2>${seg('cseg',[['cierres',`Cierres (${pc.length})`],['visitas',`Visitas (${vis.length})`],['calle','En calle'],['hist','Historial']])}`;
+  if(S.cseg==='cierres')h+=`<p class="note">Compara el dinero que entrega el cobrador con los recibos emitidos en la app.</p>`+(pc.map(c=>cierreCard(c,true)).join('')||empty('No hay cierres por cuadrar'));
+  if(S.cseg==='visitas')h+=(cobradores().length?'':alertBox('warn','No hay cobradores','Créalos en Perfil de la residencial › Directiva y personal.',"S.rtab='equipo';go('residencial')"))+vis.map(v=>`<div class="card"><div class="row"><div class="grow"><b>${casaNom(v.casaId)}</b> <span class="sm muted">· ${esc(duenoNom(v.casaId))}</span><div class="sm muted">${fFecha(v.fecha)} · ${FRANJAS[v.franja]} · ${v.periodos.map(perC).join(', ')}</div></div><b>${money(montoVisita(v))}</b></div><label class="f" style="margin:8px 0 0">Cobrador<select onchange="asignarCob('${v.id}',this.value)"><option value="">Cualquier cobrador</option>${cobradores().map(u=>`<option value="${u.id}" ${v.cobradorId===u.id?'selected':''}>${esc(u.nombre)}</option>`).join('')}</select></label></div>`).join('')||empty('Sin visitas pendientes. Los residentes las piden desde Pagos, o prográmalas desde el detalle de una casa.');
+  if(S.cseg==='calle'){const g={};calle.forEach(p=>{(g[p.cobradorId]=g[p.cobradorId]||[]).push(p)});h+=`<p class="note">Dinero cobrado que todavía no tiene cierre enviado.</p>`+(Object.entries(g).map(([id,ps])=>`<div class="card"><div class="row"><b class="grow">${esc(usuario(id).nombre)}</b><b>${money(sum(ps,p=>p.monto))}</b></div>${ps.map(filaCobro).join('')}</div>`).join('')||empty('Todo el dinero cobrado ya tiene cierre'))}
+  if(S.cseg==='hist')h+=DB.cierres.filter(c=>c.estado!=='enviado').map(c=>cierreCard(c,true)).join('')||empty('Sin cierres revisados');
+  return h}
+function asignarCob(id,u){const v=DB.visitasCobro.find(x=>x.id===id);v.cobradorId=u;if(u)notificar([u],'🧾 Cobro asignado',`${casaNom(v.casaId)} · ${fFecha(v.fecha)} · ${FRANJAS[v.franja]}`,{tab:'inicio'});save();toast('Asignado')}
+function nuevoCob(){sheet('Nuevo cobrador',`<form onsubmit="crearUsuario(event,'cobrador')"><label class="f">Nombre<input name="nombre" required></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off"></label><label class="f">Teléfono<input name="tel" inputmode="tel"></label></div><div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none"></label><label class="f">Contraseña<input name="pass" required minlength="4"></label></div><button class="btn block">Crear usuario</button></form>`)}
+
+NAV.cobrador=[{id:'inicio',l:'Ruta',i:'houses'},{id:'caja',l:'Mi caja',i:'card'},{id:'cierres',l:'Cierres',i:'log'},{id:'mas',l:'Más',i:'menu'}];
+NAV.superadmin=[{id:'inicio',l:'Panel',i:'home'},{id:'residenciales',l:'Residenciales',i:'houses'},{id:'solicitudesRes',l:'Solicitudes',i:'user'},{id:'mas',l:'Más',i:'menu'}];
+VIEWS.cobrador={inicio:vCobRuta,caja:vCobCaja,cierres:vCobCierres,mas:vVigMas,perfil:vPerfil};
+VIEWS.superadmin={inicio:vSAInicio,residenciales:vSAResidenciales,resDet:vSAResDet,nuevaRes:vSANuevaRes,solicitudesRes:vSASolicitudes,mas:vSAMas};
+VIEWS.admin.cobros=vAdmCobros;
+BACK.resDet='residenciales';BACK.nuevaRes='residenciales';
+
+/* =========================================================
+   IMPORTAR CASAS DESDE EXCEL / CSV
+   ========================================================= */
+let XLSXp=null,IMP=null;
+function cargarXLSX(){if(window.XLSX)return Promise.resolve(window.XLSX);if(XLSXp)return XLSXp;XLSXp=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=()=>res(window.XLSX);s.onerror=()=>{XLSXp=null;rej(new Error('net'))};document.head.appendChild(s)});return XLSXp}
+async function guardarArchivo(nombre,data){try{const d=window.claude&&window.claude.use?await window.claude.use('downloads'):null;if(d){await d.save({filename:nombre,data});return}}catch(e){if(e&&e.code==='declined')return;if(e&&e.code&&e.code!=='unavailable')return toast('No se pudo descargar: '+(e.message||e.code))}
+  const url=URL.createObjectURL(data instanceof Blob?data:new Blob([data]));const a=document.createElement('a');a.href=url;a.download=nombre;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}
+const PLANT=[['Número de casa','Polígono','Apellidos de la familia'],['1','A','Hernández López'],['2','A','Martínez Ruiz'],['15','B','']];
+async function descargarPlantilla(){try{const X=await cargarXLSX();const ws=X.utils.aoa_to_sheet(PLANT);ws['!cols']=[{wch:16},{wch:14},{wch:28}];const wb=X.utils.book_new();X.utils.book_append_sheet(wb,ws,'Casas');const buf=X.write(wb,{type:'array',bookType:'xlsx'});await guardarArchivo('plantilla-casas.xlsx',new Blob([buf]))}
+  catch(e){await guardarArchivo('plantilla-casas.csv','﻿'+PLANT.map(r=>r.join(',')).join('\r\n'))}}
+function importarCasas(){IMP=null;sheet('Subir casas desde archivo',`<p class="note" style="margin-top:0">Usa un Excel (.xlsx) o CSV con tres columnas: <b>Número de casa</b>, <b>Polígono</b> y <b>Apellidos de la familia</b> (opcional). La primera fila puede ser el encabezado.</p>
+  <div class="card" style="overflow-x:auto"><table style="border-collapse:collapse;font-size:13px;width:100%">${PLANT.map((r,i)=>`<tr>${r.map(c=>`<${i?'td':'th'} style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--line)">${esc(c)}</${i?'td':'th'}>`).join('')}</tr>`).join('')}</table></div>
+  <button class="btn ghost block" onclick="descargarPlantilla()">${ic('doc',18)} Descargar plantilla de Excel</button>
+  <label class="f" style="margin-top:14px">Archivo de casas<input type="file" id="impFile" accept=".xlsx,.xls,.csv,.txt,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" onchange="leerImport(this.files[0])"></label>
+  <details><summary class="sm" style="margin-bottom:8px">O pega las filas copiadas de Excel</summary><textarea id="impPaste" placeholder="1&#9;A&#9;Hernández López&#10;2&#9;A&#9;Martínez Ruiz"></textarea><button class="btn sec block" onclick="revisarPegado()">Revisar filas pegadas</button></details>
+  <div id="impPrev"></div>`)}
+function revisarPegado(){const t=document.getElementById('impPaste').value;if(!t.trim())return toast('Pega primero las filas');procesarFilas(textoAFilas(t))}
+function textoAFilas(t){const ls=t.replace(/^﻿/,'').split(/\r?\n/).filter(l=>l.trim());const sep=ls.some(l=>l.includes('\t'))?'\t':ls.some(l=>l.includes(';'))?';':',';return ls.map(l=>l.split(sep).map(x=>x.replace(/^"|"$/g,'').trim()))}
+async function leerImport(f){if(!f)return;const prev=document.getElementById('impPrev');prev.innerHTML=empty('Leyendo archivo…');
+  try{if(/\.(csv|txt)$/i.test(f.name)||f.type==='text/csv'){procesarFilas(textoAFilas(await f.text()));return}
+    const X=await cargarXLSX();const wb=X.read(await f.arrayBuffer(),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];procesarFilas(X.utils.sheet_to_json(ws,{header:1,raw:false,defval:''}).map(r=>r.map(x=>String(x).trim())))}
+  catch(e){prev.innerHTML=alertBox('bad','No se pudo leer el archivo','Revisa que sea .xlsx o .csv. Si estás sin internet, guarda el Excel como CSV o pega las filas.')}}
+const normPol=p=>{p=String(p||'').trim();if(!p)return'';return /^pol/i.test(p)?p.replace(/^pol[ií]gono/i,'Polígono'):'Polígono '+p.toUpperCase()};
+function procesarFilas(filas){filas=filas.filter(r=>r.some(c=>c));if(!filas.length){document.getElementById('impPrev').innerHTML=alertBox('bad','El archivo está vacío','');return}
+  let ci={n:0,p:1,f:2};const h=filas[0].map(x=>x.toLowerCase());
+  if(h.some(x=>/n[uú]mero|casa|pol[ií]gono|familia|apellido/.test(x))){const fx=re=>h.findIndex(x=>re.test(x));ci={n:fx(/n[uú]mero|^casa|^no\.?$|^#/),p:fx(/pol[ií]gono|pasaje|bloque|sector/),f:fx(/familia|apellido/)};if(ci.n<0)ci.n=0;filas=filas.slice(1)}
+  const vistos=new Set();
+  IMP=filas.map((r,i)=>{const numero=String(r[ci.n]??'').replace(/^casa\s*/i,'').trim(),pasaje=normPol(ci.p>=0?r[ci.p]:''),familia=ci.f>=0?String(r[ci.f]??'').trim():'';
+    const k=numero+'|'+pasaje.toLowerCase();let est='nueva',msg='';
+    if(!numero){est='error';msg='Falta el número'}else if(!pasaje){est='error';msg='Falta el polígono'}else if(vistos.has(k)){est='error';msg='Repetida en el archivo'}
+    else{const ex=DB.casas.find(c=>c.numero===numero&&c.pasaje.toLowerCase()===pasaje.toLowerCase());if(ex){est=familia&&familia!==ex.familia?'actualiza':'existe';msg=est==='actualiza'?'Ya existe · se actualizan apellidos':'Ya existe'}}
+    vistos.add(k);return{fila:i+1,numero,pasaje,familia,est,msg}});
+  const c=k=>IMP.filter(x=>x.est===k).length;const EST={nueva:['Nueva','ok'],actualiza:['Actualiza','info'],existe:['Ya existe','mut'],error:['Error','bad']};
+  document.getElementById('impPrev').innerHTML=`<h3>Revisión · ${IMP.length} fila(s)</h3><div class="months" style="margin-bottom:8px">${chip(c('nueva')+' nuevas','ok')}${c('actualiza')?chip(c('actualiza')+' actualizan apellidos','info'):''}${c('existe')?chip(c('existe')+' ya existen','mut'):''}${c('error')?chip(c('error')+' con error','bad'):''}</div>
+  <div class="card" style="max-height:300px;overflow:auto;padding:4px 14px">${IMP.slice(0,300).map(x=>`<div class="chk"><span class="grow"><b>Casa ${esc(x.numero||'?')}</b> <span class="sm muted">· ${esc(x.pasaje||'sin polígono')}${x.familia?' · Fam. '+esc(x.familia):''}</span>${x.msg?`<div class="sm muted">Fila ${x.fila}: ${esc(x.msg)}</div>`:''}</span>${chip(EST[x.est][0],EST[x.est][1])}</div>`).join('')}</div>
+  ${c('nueva')+c('actualiza')?`<button class="btn ok block big-ok" onclick="confirmarImport()">Importar ${c('nueva')} casa(s)${c('actualiza')?' y actualizar '+c('actualiza'):''}</button>`:alertBox('warn','No hay casas nuevas para importar','')}${c('error')?'<p class="note">Las filas con error no se importan. Corrígelas en el archivo y súbelo de nuevo.</p>':''}`}
+function confirmarImport(){if(!IMP)return;const per=periodoActual();const desde=ymd()<=vence(per)?per:addMonths(per,1);let n=0,u=0;
+  IMP.forEach(x=>{if(x.est==='nueva'){DB.casas.push({id:'c'+uid(),numero:x.numero,pasaje:x.pasaje,familia:x.familia,duenoId:null,codigo:genCodigo(),desde});n++}else if(x.est==='actualiza'){const ex=DB.casas.find(c=>c.numero===x.numero&&c.pasaje.toLowerCase()===x.pasaje.toLowerCase());if(ex){ex.familia=x.familia;u++}}});
+  IMP=null;ensureCuotas();save();{const pr=PLAT.residenciales.find(r=>r.id===RES);if(pr)savePlat()}closeSheet();S.cf='todas';render();toast(`${n} casa(s) importadas${u?' · '+u+' actualizadas':''}. Cobro desde ${perL(desde)}.`)}
+
+/* Configuración inicial de la plataforma */
+function vSetup(){return `<div class="login"><div class="logo">${ic('houses',34)}</div><h1 style="margin:0 0 2px">Mi Residencial</h1><p class="muted" style="margin:0 0 18px">Configuración inicial</p>
+<div class="card sm">Crea tu cuenta de <b>dueño de la app</b>. Con ella registras las residenciales, sus administradores y planes. Solo se pide una vez en este dispositivo.</div>
+<form class="card" onsubmit="crearPlataforma(event)"><label class="f">Tu nombre<input name="nombre" required autocomplete="name"></label><label class="f">Usuario<input name="user" required autocapitalize="none" autocomplete="username" placeholder="Ej. miguel"></label>
+<div class="two"><label class="f">Contraseña<input name="pass" type="password" required minlength="6" autocomplete="new-password"></label><label class="f">Repite la contraseña<input name="pass2" type="password" required minlength="6" autocomplete="new-password"></label></div>
+<label class="chk" style="border:0"><input type="checkbox" name="demo" checked><span class="sm"><b>Cargar residenciales de ejemplo</b> para probar todos los roles (puedes eliminarlas después).</span></label>
+<button class="btn block">Crear cuenta y entrar</button></form></div>`}
+function crearPlataforma(e){e.preventDefault();const f=new FormData(e.target);const un=String(f.get('user')).trim().toLowerCase();
+  if(f.get('pass')!==f.get('pass2'))return toast('Las contraseñas no coinciden');if(!/^[a-z0-9._-]{3,}$/.test(un))return toast('Usuario: mínimo 3 letras o números, sin espacios');
+  if(PLAT.superadmins.some(x=>x.user===un))return toast('Ese usuario de dueño ya existe');
+  const sa={id:'sa'+uid(),rol:'superadmin',nombre:String(f.get('nombre')).trim(),user:un,pass:f.get('pass'),activo:true};PLAT.superadmins.push(sa);savePlat();closeSheet();entrar(sa);toast('Usuario de dueño creado')}
+function miCuentaSA(){const u=S.user;sheet('Mi cuenta de dueño',`<form onsubmit="guardarCuentaSA(event)"><label class="f">Nombre<input name="nombre" required value="${esc(u.nombre)}"></label><label class="f">Usuario<input name="user" required autocapitalize="none" value="${esc(u.user)}"></label><label class="f">Contraseña actual<input name="a" type="password" required></label><label class="f">Nueva contraseña (opcional)<input name="n" type="password" minlength="6"></label><button class="btn block">Guardar</button></form>`)}
+function guardarCuentaSA(e){e.preventDefault();const f=new FormData(e.target);if(f.get('a')!==S.user.pass)return toast('La contraseña actual no es correcta');const un=String(f.get('user')).trim().toLowerCase();if(!/^[a-z0-9._-]{3,}$/.test(un))return toast('Usuario: mínimo 3 letras o números, sin espacios');
+  S.user.nombre=String(f.get('nombre')).trim();S.user.user=un;if(f.get('n'))S.user.pass=f.get('n');savePlat();closeSheet();render();toast('Cuenta actualizada')}
+const NIVELES=[['admin','Administración'],['residente','Residentes (propietarios)'],['inquilino','Inquilinos'],['vigilante','Vigilancia'],['cobrador','Cobradores']];
+function usuariosNivel(r,d){return `<h3>Usuarios de la residencial</h3><p class="note" style="margin-top:-4px">Como dueño de la app puedes entrar como cualquiera de ellos para revisar o dar soporte.</p>${NIVELES.map(([k,l])=>{const us=d.usuarios.filter(u=>u.rol===k);return `<details class="card" ${k==='admin'?'open':''}><summary class="row" style="cursor:pointer"><b class="grow">${l}</b>${chip(us.filter(u=>u.activo).length+' activos',us.length?'ok':'mut')}</summary><div style="margin-top:6px">${us.map(u=>{const c=u.casaId&&d.casas.find(x=>x.id===u.casaId);return `<div class="chk"><span class="grow"><b>${esc(u.nombre)}</b><div class="sm muted">Usuario ${esc(u.user)}${c?' · Casa '+esc(c.numero)+' '+esc(c.pasaje):''}${u.activo?'':' · inactivo'}</div></span>${u.activo?`<button class="btn smb ghost" onclick="impersonar('${r.id}','${u.id}')">Entrar</button>`:''}</div>`}).join('')||empty('Sin usuarios')}</div></details>`}).join('')}`}
+function nuevoAdminUser(){sheet('Nuevo usuario de administración',`<p class="note" style="margin-top:0">Tendrá acceso completo a la administración de esta residencial: casas, pagos, avisos, accesos y personal.</p><form onsubmit="crearUsuario(event,'admin')"><label class="f">Nombre<input name="nombre" required></label><label class="f">Cargo<select name="cargo">${Object.values(CARGOS).flat().filter(c=>c!=='Otro').map(c=>`<option>${c}</option>`).join('')}</select></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off"></label><label class="f">Teléfono<input name="tel" inputmode="tel"></label></div><div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none"></label><label class="f">Contraseña<input name="pass" required minlength="4"></label></div><button class="btn block">Crear usuario</button></form>`)}
+function crearDueno(cid){const c=casa(cid);sheet('Propietario de '+casaNom(cid),`<p class="note" style="margin-top:0">Crea el usuario del propietario si la administración ya verificó sus documentos. Si prefieres que se registre solo, entrégale el código de registro de la casa.</p><form onsubmit="guardarDueno(event,'${cid}')"><label class="f">Nombre completo<input name="nombre" required></label><label class="f">Apellidos de la familia<input name="familia" value="${esc(c.familia||'')}"></label><div class="two"><label class="f">DUI<input name="dui" inputmode="numeric" maxlength="10" autocomplete="off" required></label><label class="f">Teléfono<input name="tel" inputmode="tel"></label></div><label class="f">Correo<input name="email" type="email"></label><div class="two"><label class="f">Usuario<input name="user" required autocapitalize="none" value="casa${esc(c.numero)}"></label><label class="f">Contraseña<input name="pass" required minlength="4" value="${Math.random().toString(36).slice(2,8)}"></label></div><button class="btn block">Crear propietario</button></form>`)}
+function guardarDueno(e,cid){e.preventDefault();const f=new FormData(e.target);const g=k=>String(f.get(k)||'').trim();const un=g('user').toLowerCase();
+  if(!/^\d{8}-\d$/.test(g('dui')))return toast('DUI incompleto. Formato: 00000000-0');if(DB.usuarios.some(u=>u.user.toLowerCase()===un))return toast('Ese usuario ya existe, elige otro');
+  const c=casa(cid);const u={id:'u_'+uid(),rol:'residente',nombre:g('nombre'),user:un,pass:g('pass'),casaId:cid,tel:g('tel'),email:g('email'),dui:g('dui'),activo:true};DB.usuarios.push(u);c.duenoId=u.id;if(g('familia'))c.familia=g('familia');c.codigo=genCodigo();save();render();
+  sheet('Propietario creado',`<p>Entrega estos datos a <b>${esc(u.nombre)}</b>:</p><div class="card kv"><span>Residencial</span><b>${esc(DB.residencial.nombre)}</b><span>Usuario</span><b>${esc(un)}</b><span>Contraseña</span><b>${esc(u.pass)}</b></div><p class="note">Puede cambiar su contraseña en Más › Mi perfil.</p><button class="btn block" onclick="closeSheet()">Listo</button>`)}
+/* ---------------- Arranque ---------------- */
+document.addEventListener('input',e=>{const t=e.target;if(!t||!t.name||!/(^|\.)dui$/.test(t.name))return;const d=t.value.replace(/\D/g,'').slice(0,9);t.value=d.length>8?d.slice(0,8)+'-'+d.slice(8):d});
+loadPlat();if(PLAT)load();
+(()=>{if(!PLAT)return;const ses=getSes()||'';const[r,id]=ses.split('|');if(!id)return;if(r==='plat'){const u=PLAT.superadmins.find(x=>x.id===id);if(u)S.user=u;return}if(PLAT.residenciales.some(x=>x.id===r)){load(r);const u=usuario(id);if(u&&!puedeEntrar(u))S.user=u}})();
+render();
+window.addEventListener('storage',e=>{if(e.key===PKEY){loadPlat()}else if(e.key===dbKey(RES)){try{DB=JSON.parse(e.newValue)||DB}catch(x){return}}else return;if(S.user&&S.user.rol!=='superadmin')S.user=usuario(S.user.id)||null;const a=document.activeElement;if(!a||!['INPUT','TEXTAREA','SELECT'].includes(a.tagName))render()});
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
