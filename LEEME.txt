@@ -43,8 +43,18 @@ NOVEDADES
   propietario, familia o teléfono, y botón "Reporte PDF" de la lista filtrada.
 - Directorio: a cada persona de servicio se le puede subir la solvencia policial (foto o PDF) y su fecha de vencimiento.
 
+- TIENDA: la administración da de alta vendedores (Más > Tienda: vendedores y pedidos). Cada vendedor entra con
+  su usuario, publica productos con foto, precio y descripción, y atiende pedidos. Los residentes compran desde
+  la pestaña Tienda, eligen domicilio o retiro, y coordinan por chat. El pedido queda "Entregado" cuando
+  vendedor y comprador confirman. Si un vendedor externo sale a entregar, se crea un pase automático para vigilancia.
+
+- PERSONALIZACIÓN: en Perfil de la residencial > "Logo y colores" la administración sube su logo y elige el color
+  principal y el de la barra superior. Todos los usuarios de esa residencial ven la app con esa identidad
+  (también en recibos y reportes PDF). Cada vendedor de la tienda puede poner su logo y una foto de portada
+  (Panel > Personalizar, o Más > Perfil de mi negocio).
+
 USUARIOS DEL EJEMPLO (si cargaste los ejemplos; contraseña 1234)
-Residencial Los Almendros: admin, casa5, inquilino8, vigilante, cobrador.
+Residencial Los Almendros: admin, casa5, inquilino8, vigilante, cobrador, tienda1, tienda2.
 
 IMPORTANTE PARA LAS PRUEBAS
 Esta versión guarda los datos en el navegador de cada teléfono. Sirve para probar y enseñar la app,
