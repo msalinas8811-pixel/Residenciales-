@@ -1,4 +1,4 @@
-MI RESIDENCIAL — Versión de pruebas (PWA)
+GATEWISE — Versión de pruebas (PWA)
 
 1) SUBIRLA A UN SITIO
 Sube TODOS los archivos de esta carpeta (index.html, manifest.json, sw.js e íconos), sin cambiarles el nombre.
@@ -7,11 +7,10 @@ Debe abrirse con https:// para que funcionen la cámara y la instalación como a
   Queda en: https://tusitio.com/residencial/
 - Opción gratis y rápida: arrastra esta carpeta en Netlify Drop (app.netlify.com/drop) y te da un enlace https.
 
-2) CREAR TU USUARIO DE DUEÑO DE LA APP
-En la pantalla de inicio toca "Crear usuario de dueño de la app" y escribe tu nombre, usuario y contraseña (mínimo 6 caracteres).
-Después entras con ese usuario y contraseña en el mismo formulario de la pantalla de inicio.
-Para cambiar usuario o contraseña: Más > Mi cuenta.
-El usuario de ejemplo "plataforma" (contraseña 1234) también sigue disponible para pruebas.
+2) CREAR TU USUARIO DE ADMINISTRADOR DE LA APP
+En la pantalla de inicio toca "Crear usuario de Administrador de la APP" (nombre, usuario y clave de mínimo 6 caracteres).
+Para entrar después: en "Entrar a" elige "Administrador de la APP" (última opción de la lista) y escribe tu usuario y clave.
+Para cambiar usuario o clave: Más > Mi cuenta. Usuario de ejemplo: plataforma / 1234.
 
 BORRAR LOS DATOS DE EJEMPLO PARA EMPEZAR REAL
 En la pantalla de inicio, al final: "Borrar todos los registros" y escribe BORRAR.
@@ -19,9 +18,30 @@ Se borran las residenciales y datos de ejemplo; tu usuario de dueño se conserva
 (También está en Más > Borrar todos los registros, entrando como dueño.)
 
 3) CREAR UNA RESIDENCIAL
-Como dueño: Residenciales > Registrar. Al crearla te da el usuario y contraseña del administrador.
-El administrador entra eligiendo su residencial en la pantalla de inicio.
-Desde Casas > Subir archivo puede cargar todas las casas con la plantilla de Excel.
+Como dueño: Residenciales > Registrar. En "Administrador(a)" escribes el usuario y la clave que le asignas al administrador.
+Para entrar: en "Entrar a" elige la residencial y escribe el usuario y la clave. La app valida que el usuario
+pertenezca a esa residencial (administración, residentes, inquilinos, vigilancia o cobradores).
+Desde Casas > Subir Excel carga todas las casas, propietarios y los meses que debe cada una
+(plantilla incluida). También en Pagos > Mora > "Cargar saldos y moras desde Excel".
+En el detalle de cada casa: "Editar meses que debe / saldo inicial" para marcarlos mes por mes.
+
+NOVEDADES
+- Pantalla de inicio: en "Entrar a" escribe las primeras letras y elige la residencial de la lista.
+- Directorio (Más > Directorio): números de emergencia y servicios de confianza (plomeros, electricistas,
+  empleadas de casa, etc.) que agrega la administración. Los residentes pueden llamar, escribir por WhatsApp
+  o crear un pase de acceso para esa persona.
+- Idioma: ícono 🌐 en la barra de arriba (ES/EN), botón "English" en la pantalla de inicio o Más > Español / English.
+- Condominios: torres, pisos, apartamentos por piso, numeración (101, A-101 o correlativo), área, estacionamientos,
+  bodega, cuota fija o por área (m²/ft²), fondo de reserva, amenidades y empresa administradora.
+- Registro de residenciales y condominios: elige Tipo (Residencial o Condominio / HOA) y País.
+  La dirección se adapta al país (EE. UU.: Street, City, State, ZIP; El Salvador: Departamento, Municipio;
+  México: Colonia, Estado, CP; etc.), igual que la moneda, el documento de identidad y el código telefónico.
+
+- Reportes en PDF (Más > Reportes, o Pagos > Mora): casas en mora, casas solventes, personas en mora
+  y resumen general, filtrables por polígono. Se generan en el teléfono, sin internet.
+- Casas: filtros Todas / En mora / Solventes / Sin dueño con conteo, filtro por polígono, búsqueda por número,
+  propietario, familia o teléfono, y botón "Reporte PDF" de la lista filtrada.
+- Directorio: a cada persona de servicio se le puede subir la solvencia policial (foto o PDF) y su fecha de vencimiento.
 
 USUARIOS DEL EJEMPLO (si cargaste los ejemplos; contraseña 1234)
 Residencial Los Almendros: admin, casa5, inquilino8, vigilante, cobrador.

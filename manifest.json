@@ -1,11 +1,11 @@
 {
-  "name": "Mi Residencial",
-  "short_name": "Residencial",
-  "description": "Administración de residenciales: accesos, pagos, avisos y reclamos",
+  "name": "GateWise",
+  "short_name": "GateWise",
+  "description": "Smart access, payments and community management for residential communities and condos",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f6f8",
+  "background_color": "#f3f5f7",
   "theme_color": "#0f766e",
   "lang": "es",
   "icons": [
